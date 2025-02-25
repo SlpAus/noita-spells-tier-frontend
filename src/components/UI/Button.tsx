@@ -1,14 +1,13 @@
 // 基本按钮样式
 
-import React from 'react';
 import { button } from '../../types/button';
 
-const Button = (props: { bt : button }) =>{
-    const bt : button = props.bt;
+const Button = (props: { bt: button }) => {
+    const bt: button = props.bt;
     return (
         <button
             onClick={bt.onClick}
-            className={`px-4 py-2 rounded-md text-black text-xl hover:bg-gray-300 transition-colors duration-300 font-semibold ${bt.backGround ? bt.backGround : "bg-gray-100"} ${bt.className ? bt.className : ''} ${bt.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            className={`px-4 py-1 rounded-md text-black text-xl hover:bg-gray-300 transition-colors duration-300 font-semibold ${bt.backGround ? bt.backGround : "bg-gray-100"} ${bt.className ? bt.className : ''} ${bt.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             disabled={bt.disabled}
         >
             {bt.text}
