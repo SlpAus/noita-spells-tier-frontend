@@ -7,7 +7,7 @@ import Title from './Title';
 
 const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButtonProps, LastVote: string }) => {
     return (
-        <div className="flex bg-gray-50 bg-opacity-95 items-center w-[46rem] justify-center space-x-10 py-8 px-10 rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300">
+        <div className="flex bg-gray-50 bg-opacity-[97%] items-center w-[46rem] justify-center space-x-10 py-8 px-10 rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300">
             <button onClick={props.ChooseProps.OnClick_1}>
                 <Image image_prop={props.left} />
             </button>

@@ -9,6 +9,8 @@ import Attention from "./components/Attention";
 import Rank from "./components/Rank";
 import { ranking } from "./types/ranking";
 import { GetRanking } from "./utils/GetRanking";
+import Filter from "./components/Filter";
+import { filter } from "./types/filter";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
@@ -16,10 +18,15 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [rank, setRank] = useState<ranking[]>([]);
+  const [filter, setFilter] = useState<filter>({
+    startQuality: 3,
+    endQuality: 4,
+    canBeLost: false,
+  });
 
   const GetTwoItem = () => {
     setError(null);
-    GetItems(2)
+    GetItems(2, filter)
       .then((res: item[]) => {
         setItemList(res);
       })
@@ -29,8 +36,26 @@ function App() {
       });
   };
 
+  const OnFilterChange = (filter_p: filter) => {
+    setFilter(filter_p);
+    GetRanking("item", filter_p)
+      .then((res: ranking[]) => {
+        setRank(res);
+      }).catch((error) => {
+        console.error("Error fetching ranking:", error);
+        setError("Failed to fetch ranking.");
+      });
+    GetItems(2, filter_p)
+      .then((res: item[]) => {
+        setItemList(res);
+      }).catch((error) => {
+        console.error("Error fetching items:", error);
+        setError("Failed to fetch items.");
+      });
+  };
+
   const GetRank = () => {
-    GetRanking("item")
+    GetRanking("item", filter)
       .then((res: ranking[]) => {
         setRank(res);
       })
@@ -62,7 +87,7 @@ function App() {
   }
   return (
     <div>
-      <div className="bg-transparent bg-fixed bg-[url('../public/Collectibles_sprite.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
+      <div className="bg-transparent bg-[length:100%] bg-no-repeat bg-opacity-50 bg-[url('../public/Collectibles_sprite.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
         {error && <div className="text-red-500">{error}</div>}
         {ItemList.length > 0 && (
           <RankingVS
@@ -82,6 +107,7 @@ function App() {
             LastVote={lastVote || ""}
           />
         )}
+        <Filter onFilterChange={OnFilterChange} />
         <Rule />
         <Attention />
         <Rank title="道具排行榜" rank={rank} onRefresh={() => {
