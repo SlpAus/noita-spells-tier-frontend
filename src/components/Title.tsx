@@ -11,10 +11,10 @@ const Title = () => {
     //     setTitleIndex((titleIndex + 1) % TitleSize);
     // }
     return (
-        <Box className="text-center w-max text-red-500">
-            <h1 className="text-4xl font-bold">以撒的结合道具投票箱</h1>
-        </Box>
-
+        <div className="space-y-3">
+            <h1 className="text-4xl font-bold text-red-500">以撒的结合</h1>
+            <h1 className="text-4xl font-bold text-red-500">道具投票箱</h1>
+        </div>
 
     )
 }

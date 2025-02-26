@@ -1,18 +1,21 @@
 import RankingVS from "./components/RankingVS";
 import { ChooseButtonProps } from "./components/ChooseButton";
-import Title from "./components/Title";
 import { useState, useEffect } from "react";
 import { GetItems } from "./utils/GetItems";
 import { SendVoting } from "./utils/SendVoting";
 import { item } from "./types/item";
 import Rule from "./components/Rule";
 import Attention from "./components/Attention";
+import Rank from "./components/Rank";
+import { ranking } from "./types/ranking";
+import { GetRanking } from "./utils/GetRanking";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
   const [ItemList, setItemList] = useState<item[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastVote, setLastVote] = useState<string | null>(null);
+  const [rank, setRank] = useState<ranking[]>([]);
 
   const GetTwoItem = () => {
     setError(null);
@@ -26,8 +29,20 @@ function App() {
       });
   };
 
+  const GetRank = () => {
+    GetRanking("item")
+      .then((res: ranking[]) => {
+        setRank(res);
+      })
+      .catch((error) => {
+        console.error("Error fetching ranking:", error);
+        setError("Failed to fetch ranking.");
+      });
+  };
+
   useEffect(() => {
     GetTwoItem();
+    GetRank();
   }, []);
 
   const vote = async (type: string, winner: number, loser: number) => {
@@ -47,8 +62,7 @@ function App() {
   }
   return (
     <div>
-      <div className="min-h-screen flex flex-col items-center space-y-10 p-4">
-        <Title />
+      <div className="bg-transparent bg-fixed bg-[url('../public/Collectibles_sprite.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
         {error && <div className="text-red-500">{error}</div>}
         {ItemList.length > 0 && (
           <RankingVS
@@ -70,6 +84,9 @@ function App() {
         )}
         <Rule />
         <Attention />
+        <Rank title="道具排行榜" rank={rank} onRefresh={() => {
+          GetRank();
+        }} />
       </div>
     </div>
 
