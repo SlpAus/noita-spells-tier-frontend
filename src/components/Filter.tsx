@@ -7,7 +7,7 @@ interface FilterProps {
 }
 
 export default function Filter({ onFilterChange }: FilterProps) {
-    const [startQuality, setStartQuality] = useState(3);
+    const [startQuality, setStartQuality] = useState(0);
     const [endQuality, setEndQuality] = useState(4);
     const [canBeLost, setCanBeLost] = useState(false);
 

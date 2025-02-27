@@ -8,7 +8,7 @@ import Box from './UI/Box';
 
 const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButtonProps, LastVote: string }) => {
     return (
-        <Box className="flex flex-col items-center justify-center space-y-10">
+        <Box className="flex flex-col items-center justify-center space-y-6">
 
             {/* 标题 */}
             <div className="flex flex-col items-center space-y-3">

@@ -20,7 +20,7 @@ function App() {
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [rank, setRank] = useState<ranking[]>([]);
   const [filter, setFilter] = useState<filter>({
-    startQuality: 3,
+    startQuality: 0,
     endQuality: 4,
     canBeLost: false,
   });
@@ -87,10 +87,8 @@ function App() {
     OnClick_3: () => GetTwoItem(),
   }
   return (
-    <div className="relative min-h-screen flex flex-col items-center p-4">
-      <div className="absolute inset-0 bg-[url('../public/images/Collectibles_sprite.png')] bg-cover bg-no-repeat bg-opacity-20"></div>
-      <div className="absolute inset-0 bg-black opacity-20"></div>
-      <div className="relative z-10 space-y-10">
+    <div>
+      <div className=" bg-transparent bg-[length:100%] bg-no-repeat bg-opacity-50 bg-[url('../public/images/bg.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
         {error && <div className="text-red-500">{error}</div>}
         {ItemList.length > 0 && (
           <RankingVS
