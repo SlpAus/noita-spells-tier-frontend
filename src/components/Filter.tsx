@@ -36,7 +36,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
 
     return (
         <Box className="flex justify-between items-center px-10 py-5">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
                 <label htmlFor="startQuality" className="text-lg font-bold">道具品质起始：</label>
                 <select
                     id="startQuality"
@@ -49,7 +49,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
                     ))}
                 </select>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
                 <label htmlFor="endQuality" className="text-lg font-bold">道具品质终止：</label>
                 <select
                     id="endQuality"
@@ -62,7 +62,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
                     ))}
                 </select>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
                 <label htmlFor="canBeLost" className="text-lg font-bold">被里Lost限制：</label>
                 <select
                     id="canBeLost"

@@ -11,6 +11,7 @@ import { ranking } from "./types/ranking";
 import { GetRanking } from "./utils/GetRanking";
 import Filter from "./components/Filter";
 import { filter } from "./types/filter";
+import Stuff from "./components/Stuff";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
@@ -86,20 +87,24 @@ function App() {
     OnClick_3: () => GetTwoItem(),
   }
   return (
-    <div>
-      <div className="bg-transparent bg-[length:100%] bg-no-repeat bg-opacity-50 bg-[url('../public/Collectibles_sprite.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
+    <div className="relative min-h-screen flex flex-col items-center p-4">
+      <div className="absolute inset-0 bg-[url('../public/images/Collectibles_sprite.png')] bg-cover bg-no-repeat bg-opacity-20"></div>
+      <div className="absolute inset-0 bg-black opacity-20"></div>
+      <div className="relative z-10 space-y-10">
         {error && <div className="text-red-500">{error}</div>}
         {ItemList.length > 0 && (
           <RankingVS
             left={{
               url: ItemList[0].url,
               name: ItemList[0].name,
+              description: ItemList[0].description,
               width: 200,
               height: 300,
             }}
             right={{
               url: ItemList[1].url,
               name: ItemList[1].name,
+              description: ItemList[1].description,
               width: 200,
               height: 300,
             }}
@@ -110,6 +115,7 @@ function App() {
         <Filter onFilterChange={OnFilterChange} />
         <Rule />
         <Attention />
+        {/* <Stuff /> */}
         <Rank title="道具排行榜" rank={rank} onRefresh={() => {
           GetRank();
         }} />
