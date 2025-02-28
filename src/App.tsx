@@ -87,8 +87,8 @@ function App() {
     OnClick_3: () => GetTwoItem(),
   }
   return (
-    <div>
-      <div className=" bg-transparent bg-[length:100%] bg-no-repeat bg-opacity-50 bg-[url('../public/images/bg.png')] min-h-screen flex flex-col items-center space-y-10 p-4">
+    <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.png')] min-w-[54rem]  ">
+      <div className="flex flex-wrap justify-center items-center text-center space-x-10 space-y-10">
         {error && <div className="text-red-500">{error}</div>}
         {ItemList.length > 0 && (
           <RankingVS
@@ -109,7 +109,6 @@ function App() {
             ChooseProps={ChoosenButtonP}
             LastVote={lastVote || ""}
           />
-
         )}
         <Filter onFilterChange={OnFilterChange} />
         <Rule />
@@ -119,8 +118,10 @@ function App() {
         }} />
         {/* <Stuff /> */}
 
+
       </div>
     </div>
+
 
   );
 }

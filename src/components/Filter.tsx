@@ -35,7 +35,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
     };
 
     return (
-        <Box className="flex justify-between items-center px-10 py-5">
+        <Box className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
                 <label htmlFor="startQuality" className="text-lg font-bold">道具品质起始：</label>
                 <select

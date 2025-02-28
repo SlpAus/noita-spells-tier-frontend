@@ -17,7 +17,7 @@ const Image = (props: { image_prop: image }) => {
                 </p>
             ) : null}
             {image_prop.description ? (
-                <div className="p-2 shadow-md hover:bg-red-600 hover:text-white transition-colors duration-300">
+                <div className="text-base p-2 shadow-md hover:bg-red-600 hover:text-white transition-colors duration-300">
                     {image_prop.description}
                 </div>
             ) : null}
