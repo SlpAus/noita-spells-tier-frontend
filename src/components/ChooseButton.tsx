@@ -30,7 +30,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                 <button
                     onClick={props.prop.OnClick_3}
                     className="group bg-green-600 px-1 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-yellow-400 hover:text-white transition-all duration-300">
-                    <div className=" flex items-center space-x-2 justify-center">
+                    <div className=" flex items-center space-x-1 justify-center">
                         <img src="/images/wl.png" alt="111" className="group-hover:rotate-180 transition-all duration-300"></img>
                         <p className="text-base">你问我？我怎么知道？</p>
                     </div>

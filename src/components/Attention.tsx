@@ -13,6 +13,7 @@ export default function Attention() {
                 <a href="https://github.com/Qiuarctica/ys-voting-frontend" className="text-2xl font-bold mx-1 text-blue-700 hover:text-red-600">Github</a>
                 上，非常希望有志同道合的同学可以加入这个项目，或者是提一些建议!
             </p>
+            <p className="text-3xl font-bold animate-slide-fade text-red-600">暂时没做移动端适配，手机访问可以打开浏览器的桌面模式!手机访问可以打开浏览器的桌面模式!手机访问可以打开浏览器的桌面模式!</p>
         </Box>
     )
 }

@@ -17,16 +17,16 @@ const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButton
 
             {/* 中间层：道具VS */}
             <div className='flex items-center justify-center space-x-2'>
-                <button onClick={props.ChooseProps.OnClick_1} className="">
+                <button onClick={props.ChooseProps.OnClick_1} className="w-1/3">
                     <Image image_prop={props.left} />
                 </button>
-                <div className="flex flex-col items-center space-y-16 w-[13rem]">
+                <div className="flex flex-col items-center space-y-16 w-1/3">
                     <img src="/images/vs.png"></img>
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-3xl text-red-500 font-bold text-center">{props.LastVote}</p>
                     </div>
                 </div>
-                <button onClick={props.ChooseProps.OnClick_2}>
+                <button onClick={props.ChooseProps.OnClick_2} className='w-1/3'>
                     <Image image_prop={props.right} />
                 </button>
             </div>

@@ -109,14 +109,16 @@ function App() {
             ChooseProps={ChoosenButtonP}
             LastVote={lastVote || ""}
           />
+
         )}
         <Filter onFilterChange={OnFilterChange} />
         <Rule />
         <Attention />
-        {/* <Stuff /> */}
         <Rank title="道具排行榜" rank={rank} onRefresh={() => {
           GetRank();
         }} />
+        {/* <Stuff /> */}
+
       </div>
     </div>
 
