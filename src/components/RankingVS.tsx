@@ -8,19 +8,19 @@ import Box from './UI/Box';
 
 const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButtonProps, LastVote: string }) => {
     return (
-        <Box className="flex flex-col items-center justify-center space-y-6">
+        <Box className="flex flex-col h-[48rem] items-center justify-center space-y-6">
             {/* 标题 */}
             <Title />
 
             {/* 中间层：道具VS */}
-            <div className='flex items-center justify-center space-x-2'>
+            <div className='flex items-center justify-center h-[24rem] space-x-2'>
                 <button onClick={props.ChooseProps.OnClick_1} className="w-1/3">
                     <Image image_prop={props.left} />
                 </button>
                 <div className="flex flex-col items-center space-y-16 w-1/3">
                     <img src="/images/vs.png"></img>
                     <div className="flex flex-col items-center space-y-6">
-                        <p className="text-3xl text-red-500 font-bold text-center">{props.LastVote}</p>
+                        <p className="text-2xl text-red-500 font-bold text-center">{props.LastVote}</p>
                     </div>
                 </div>
                 <button onClick={props.ChooseProps.OnClick_2} className='w-1/3'>
@@ -29,7 +29,7 @@ const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButton
             </div>
 
             {/* 下方层：选择按钮 */}
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center 和-">
                 <ChooseButton prop={props.ChooseProps} />
             </div>
 

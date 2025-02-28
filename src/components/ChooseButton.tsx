@@ -1,9 +1,10 @@
 // 选择按钮，用于做出选择
 
 export interface ChooseButtonProps {
-    OnClick_1: () => void,
-    OnClick_2: () => void,
-    OnClick_3: () => void,
+    OnClick_1: () => void,//左赢
+    OnClick_2: () => void,//右赢
+    OnClick_3: () => void,//都输
+    OnClick_4: () => void,//无事发生
 }
 
 const ChooseButton = (props: { prop: ChooseButtonProps }) => {
@@ -28,7 +29,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                     </div>
                 </button>
                 <button
-                    onClick={props.prop.OnClick_3}
+                    onClick={props.prop.OnClick_4}
                     className="group bg-green-600 px-1 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-yellow-400 hover:text-white transition-all duration-300">
                     <div className=" flex items-center space-x-1 justify-center">
                         <img src="/images/wl.png" alt="111" className="group-hover:rotate-180 transition-all duration-300"></img>

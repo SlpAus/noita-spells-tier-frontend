@@ -55,11 +55,12 @@ export default function Rank(props: { rank: ranking[], title: string, onRefresh:
                 </button>
             </div>
             <div className="flex justify-between px-5 pt-5 rounded-xl">
-                <p className="text-2xl font-bold text-center w-1/5">杯级</p>
-                <p className="text-2xl font-bold text-center w-1/5">排名</p>
-                <p className="text-2xl font-bold text-center w-1/5">名字</p>
-                <p className="text-2xl font-bold text-center w-1/5">分数</p>
-                <p className="text-2xl font-bold text-center w-1/5">胜率</p>
+                <p className="text-2xl font-bold text-center w-1/6">杯级</p>
+                <p className="text-2xl font-bold text-center w-1/6">排名</p>
+                <p className="text-2xl font-bold text-center w-1/6">名字</p>
+                <p className="text-2xl font-bold text-center w-1/6">分数</p>
+                <p className="text-2xl font-bold text-center w-1/6">胜率</p>
+                <p className="text-2xl font-bold text-center w-1/6">总场</p>
             </div>
             <div className="flex flex-col rounded-xl">
                 {props.rank.map((item, index) => {
@@ -68,11 +69,12 @@ export default function Rank(props: { rank: ranking[], title: string, onRefresh:
                     }
                     return (
                         <div key={index} className={` flex justify-between px-5 py-0.5 ${getBackgroundColor(index)}`}>
-                            <p className="text-xl text-center font-semibold w-1/5">{getCupLevel(index)}</p>
-                            <p className="text-xl text-center w-1/5">{item.rank}</p>
-                            <p className="text-xl text-center w-1/5">{item.name}</p>
-                            <p className="text-xl text-center w-1/5">{item.score.toFixed(2)}</p>
-                            <p className="text-xl text-center w-1/5">{(item.winpercent * 100).toFixed(2)}%</p>
+                            <p className="text-lg text-center font-semibold w-1/6">{getCupLevel(index)}</p>
+                            <p className="text-lg text-center w-1/6">{item.rank}</p>
+                            <p className="text-lg text-center w-1/6">{item.name}</p>
+                            <p className="text-lg text-center w-1/6">{item.score.toFixed(1)}</p>
+                            <p className="text-lg text-center w-1/6">{(item.winpercent * 100).toFixed(1)}%</p>
+                            <p className="text-lg text-center w-1/6">{(item.totals).toFixed(1)}</p>
                         </div>
                     );
                 })}

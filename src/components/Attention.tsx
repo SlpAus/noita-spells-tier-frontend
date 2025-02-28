@@ -11,9 +11,8 @@ export default function Attention() {
             <p className="text-2xl font-bold animate-slide-fade">
                 本投票箱仅供娱乐，不具有任何商业用途，如有侵权请联系我删除。同时，本投票箱开源在
                 <a href="https://github.com/Qiuarctica/ys-voting-frontend" className="text-2xl font-bold mx-1 text-blue-700 hover:text-red-600">Github</a>
-                上，非常希望有志同道合的同学可以加入这个项目，或者是提一些建议!
+                上，非常希望有志同道合的同学可以加入这个项目，或者是提一些建议!若是想进行交流，或是提出建议，亦或是发现bug，欢迎加入QQ群：903619222。
             </p>
-            <p className="text-3xl font-bold animate-slide-fade text-red-600">暂时没做移动端适配，手机访问可以打开浏览器的桌面模式!手机访问可以打开浏览器的桌面模式!手机访问可以打开浏览器的桌面模式!</p>
         </Box>
     )
 }
