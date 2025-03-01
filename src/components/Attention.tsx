@@ -13,6 +13,10 @@ export default function Attention() {
                 <a href="https://github.com/Qiuarctica/ys-voting-frontend" className="text-2xl font-bold mx-1 text-blue-700 hover:text-red-600">Github</a>
                 上，非常希望有志同道合的同学可以加入这个项目，或者是提一些建议!若是想进行交流，或是提出建议，亦或是发现bug，欢迎加入QQ群：903619222。
             </p>
+            <p className="text-3xl font-bold animate-slide-fade text-red-600">
+                本投票箱还缺少很多很多数据，希望大家踊跃参与，多多宣传，谢谢大家！！并且，制作不易，如果喜欢本投票箱，还请去Github上给我点一个Star,真的很需要，谢谢！
+
+            </p>
         </Box>
     )
 }

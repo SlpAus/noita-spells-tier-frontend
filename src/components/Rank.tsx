@@ -5,6 +5,25 @@ import { useState } from "react";
 export default function Rank(props: { rank: ranking[], title: string, onRefresh: () => void }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+    const [sortBy, setSortBy] = useState<"total" | "score" | "winpercent">("score");
+    const toggleSortOrder = (criteria: "score" | "winpercent" | "total") => {
+        if (sortBy === criteria) {
+            setSortOrder(prevOrder => (prevOrder === "asc" ? "desc" : "asc"));
+        } else {
+            setSortBy(criteria);
+            setSortOrder("desc");
+        }
+    };
+    const sortedRank = [...props.rank].sort((a, b) => {
+        if (sortBy === "score") {
+            return sortOrder === "asc" ? a.score - b.score : b.score - a.score;
+        } else if (sortBy === "winpercent") {
+            return sortOrder === "asc" ? a.winpercent - b.winpercent : b.winpercent - a.winpercent;
+        } else {
+            return sortOrder === "asc" ? a.totals - b.totals : b.totals - a.totals;
+        }
+    });
 
     const NotExpandSize = 30;
 
@@ -43,8 +62,9 @@ export default function Rank(props: { rank: ranking[], title: string, onRefresh:
     return (
         <Box>
             <div className="flex justify-between items-center px-10 py-5">
-                <div className="flex-1 text-center">
-                    <h1 className="text-4xl font-bold">{props.title}</h1>
+                <div className="flex-1 text-center hover:bg-gray-200 transition-colors duration-300">
+                    <button onClick={toggleExpand}
+                        className="text-4xl font-bold">{props.title}</button>
                 </div>
                 <button
                     onClick={handleRefresh}
@@ -58,12 +78,27 @@ export default function Rank(props: { rank: ranking[], title: string, onRefresh:
                 <p className="text-2xl font-bold text-center w-1/6">杯级</p>
                 <p className="text-2xl font-bold text-center w-1/6">排名</p>
                 <p className="text-2xl font-bold text-center w-1/6">名字</p>
-                <p className="text-2xl font-bold text-center w-1/6">分数</p>
-                <p className="text-2xl font-bold text-center w-1/6">胜率</p>
-                <p className="text-2xl font-bold text-center w-1/6">总场</p>
+                <button
+                    onClick={() => toggleSortOrder("score")}
+                    className="text-2xl font-bold text-center w-1/6"
+                >
+                    分数 {sortBy === "score" && (sortOrder === "asc" ? "↑" : "↓")}
+                </button>
+                <button
+                    onClick={() => toggleSortOrder("winpercent")}
+                    className="text-2xl font-bold text-center w-1/6"
+                >
+                    胜率 {sortBy === "winpercent" && (sortOrder === "asc" ? "↑" : "↓")}
+                </button>
+                <button
+                    onClick={() => toggleSortOrder("total")}
+                    className="text-2xl font-bold text-center w-1/6"
+                >
+                    总场 {sortBy === "total" && (sortOrder === "asc" ? "↑" : "↓")}
+                </button>
             </div>
             <div className="flex flex-col rounded-xl">
-                {props.rank.map((item, index) => {
+                {sortedRank.map((item, index) => {
                     if (!isExpanded && index >= NotExpandSize) {
                         return null;
                     }

@@ -10,6 +10,11 @@ export default function Rule() {
 
     return (
         <Box className="space-y-4">
+            <p className={`text-2xl font-bold text-red-300 animate-slide-fade`}>
+                新功能添加：1. 现在可以查看道具的1v1的对位数据了！但是由于本人的失误，丢失了许多数据，导致对位数据的数量和准确性目前还不足，还要靠大家多多投票了QAQ。
+                <br />2.现在排行榜可以按照分数 胜率 总数进行升序或降序排列了！大家查看最强最弱道具都不用翻到最下面了！并且点击两个排行榜的标题都可以切换排行榜的收缩展开状态了！<br />
+                3.屏幕最右边添加了一个目录，可以自动定位到想要的功能了！
+            </p>
             <p className={`text-xl font-bold animate-slide-fade`}>
                 规则：假设你面前是一个二选一道具房，请你在出现的道具中，结合各种实战场景选择你最可能选择的道具。投票采取ELO机制，每个道具的ELO分数会根据你的选择和其他人的选择动态进行调整。最后根据分数和胜率进行排名。
             </p>

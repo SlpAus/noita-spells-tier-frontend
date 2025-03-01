@@ -8,3 +8,4 @@ export interface item {
     description: string; // 道具的描述
     filternum: number; // 筛选后的道具数量
 }
+
