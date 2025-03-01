@@ -84,7 +84,7 @@ function App() {
     OnClick_4: () => GetTwoItem(filter),
   }
   return (
-    <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.png')] min-w-[54rem]  ">
+    <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.webp')] min-w-[54rem]  ">
       <div className="flex flex-wrap justify-center items-center text-center space-x-10 space-y-10">
         {error && <Error error={error} onClick={() => { setError(null) }} />}
         {ItemList.length > 0 && (

@@ -12,7 +12,7 @@ const Title = () => {
     // }
     return (
         <div className="space-y-3">
-            <img src="/images/title.gif"></img>
+            <img src="/images/title.webp"></img>
         </div>
 
     )
