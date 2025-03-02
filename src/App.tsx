@@ -15,6 +15,7 @@ import Error from "./components/Error";
 import { GetItemRank } from "./utils/GetItemRank";
 import ItemRank from "./components/ItemRank";
 import BackTo, { BackToProps } from "./components/BackTo";
+import { vote, VOTEResult } from "./types/votingResult";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
@@ -45,19 +46,30 @@ function App() {
       })
       .catch((error) => {
         console.error("Error fetching items:", error);
-        setError(error.message);
-        OnFilterChange(defaultFilter);
+        if (error.response) {
+          const errorMessage = error.response.data.error
+          setError(errorMessage);
+          if (errorMessage.includes("道具数量不足"))
+            OnFilterChange(defaultFilter);
+        } else {
+          setError("无法获取道具，请稍后再试");
+        }
       });
   };
+
   const GetRank = (filter_p: filter) => {
     GetRanking("item", filter_p)
       .then((res: ranking[]) => {
         setRank(res);
       })
       .catch((error) => {
-        console.error("Error fetching ranking:", error);
-        setError("Failed to fetch ranking.");
-        OnFilterChange(defaultFilter);
+        if (error.response) {
+          const errorMessage = error.response.data.error
+          setError(errorMessage);
+        } else {
+          setError("无法获取排行榜，请稍后再试");
+        }
+
       });
   };
 
@@ -69,10 +81,7 @@ function App() {
       )
       .catch((error) => {
         console.error("Error fetching ranking:", error);
-        setError("Failed to fetch ranking.");
-        if (error.message === "No ranking data") {
-          OnFilterChange(defaultFilter);
-        }
+        setError("无法获得道具对位数据，请稍后尝试");
       }
       );
   }
@@ -84,7 +93,7 @@ function App() {
       })
       .catch((error) => {
         console.error("Error fetching items:", error);
-        setError(error.message);
+        setError("无法获取道具信息，请稍后再试");
       });
   }
 
@@ -128,14 +137,14 @@ function App() {
     };
   }, []);
 
-  const vote = async (type: string, winner: number, loser: number, filterNum: number) => {
-    const result = await SendVoting({ type, winner, loser, filterNum });
+  const vote = async (VoteResult: VOTEResult) => {
+    const result = await SendVoting({ result: VoteResult });
     if (result) {
-      const winnerItem = ItemList.find((item) => item.id === winner);
-      const loserItem = ItemList.find((item) => item.id === loser);
-      if (type == "nobody") {
-        setLastVote(`哈哈，${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)没一个是人`);
+      if (VoteResult === VOTEResult.NOBODY) {
+        setLastVote(`哈哈，${ItemList[0].name}(${rank.find((item) => item.name === ItemList[0].name)?.rank}名)，${ItemList[1].name}(${rank.find((item) => item.name === ItemList[1].name)?.rank}名)没一个是人`);
       } else {
+        const winnerItem = VoteResult === VOTEResult.LEFT ? ItemList[0] : ItemList[1];
+        const loserItem = VoteResult === VOTEResult.LEFT ? ItemList[1] : ItemList[0];
         setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，于此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
       }
       GetTwoItem(filter);
@@ -145,9 +154,9 @@ function App() {
     }
   };
   const ChoosenButtonP: ChooseButtonProps = {
-    OnClick_1: () => vote("item", ItemList[0].id, ItemList[1].id, fn),
-    OnClick_2: () => vote("item", ItemList[1].id, ItemList[0].id, fn),
-    OnClick_3: () => vote("nobody", ItemList[0].id, ItemList[1].id, fn),
+    OnClick_1: () => vote(VOTEResult.LEFT),
+    OnClick_2: () => vote(VOTEResult.RIGHT),
+    OnClick_3: () => vote(VOTEResult.NOBODY),
     OnClick_4: () => GetTwoItem(filter),
   }
   const filterRef = useRef<HTMLDivElement>(null);
@@ -174,7 +183,7 @@ function App() {
 
   return (
     <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.webp')] min-w-[54rem]  ">
-      <div className="flex flex-wrap justify-center items-center text-center space-x-10 space-y-10">
+      <div className="flex flex-col justify-center items-center text-center space-x-10 space-y-10">
         {error && <Error error={error} onClick={() => { setError(null) }} />}
         {ItemList.length > 0 && (
           <RankingVS

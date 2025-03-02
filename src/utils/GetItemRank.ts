@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../axiosConfig";
 import { BACKEN_URL } from "../config";
 import { filter } from "../types/filter";
 import { itemRank, ranking } from "../types/ranking";
@@ -6,7 +6,7 @@ import { itemRank, ranking } from "../types/ranking";
 // get /api/rank/getItemRank?itemID=XXX&itemPools=A,B,C...&startQuality=1&endQuality=2&canBeLost=true
 
 export async function GetItemRank(itemID: number, filter: filter): Promise<itemRank[]> {
-    const res = await axios.get(`${BACKEN_URL}/api/rank/getItemRank`, {
+    const res = await axiosInstance.get(`${BACKEN_URL}/api/rank/getItemRank`, {
         params: {
             itemID: itemID,
             startQuality: filter.startQuality,

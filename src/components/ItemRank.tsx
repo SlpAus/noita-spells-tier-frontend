@@ -12,7 +12,7 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
     const [currentPage, setCurrentPage] = useState(1);
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-    const itemsPerPage = 8;
+    const itemsPerPage = 6;
 
     const filteredItems = props.allItems.filter(item => item.name.includes(searchTerm));
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
