@@ -133,7 +133,11 @@ function App() {
     if (result) {
       const winnerItem = ItemList.find((item) => item.id === winner);
       const loserItem = ItemList.find((item) => item.id === loser);
-      setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，于此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
+      if (type == "nobody") {
+        setLastVote(`哈哈，${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)没一个是人`);
+      } else {
+        setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，于此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
+      }
       GetTwoItem(filter);
     } else {
       setError("Failed to send vote");
