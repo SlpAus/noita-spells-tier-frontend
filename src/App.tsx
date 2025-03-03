@@ -24,6 +24,7 @@ function App() {
     endQuality: 4,
     canBeLost: false,
     itemPools: [],
+    isActive: 0,
   }
   const [ItemList, setItemList] = useState<item[]>([]);
   const [error, setError] = useState<string | null>(null);

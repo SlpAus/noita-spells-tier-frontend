@@ -4,6 +4,7 @@ export interface filter {
     endQuality: number; // 结束的品质
     canBeLost: boolean; // 是否可以被Lost获取
     itemPools: string[]; // 道具池
+    isActive: number; //是否是主动道具 0:不限 1:是 2:否
 }
 
 export const itemPools: string[] = [

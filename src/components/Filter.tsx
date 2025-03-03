@@ -25,7 +25,7 @@ export default function Filter({ setFilter, Filter, onFilterChange, filterNum }:
 
     const StartValueSelect = () => {
         return (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 ">
                 <label htmlFor="startQuality" className="text-lg font-bold">道具品质起始：</label>
                 <select
                     id="startQuality"
@@ -100,6 +100,36 @@ export default function Filter({ setFilter, Filter, onFilterChange, filterNum }:
         )
     }
 
+    const handleIsActiveChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const isActive = parseInt(event.target.value);
+        setFilter((prevFilter) => ({
+            ...prevFilter,
+            isActive,
+        }));
+        onFilterChange({
+            ...Filter,
+            isActive,
+        });
+    };
+
+    const IsActiveSelect = () => {
+        return (
+            <div className="flex items-center space-x-2">
+                <label htmlFor="isActive" className="text-lg font-bold">主动道具：</label>
+                <select
+                    id="isActive"
+                    value={Filter.isActive}
+                    onChange={handleIsActiveChange}
+                    className="border rounded px-2 py-1"
+                >
+                    <option value={0}>不限</option>
+                    <option value={1}>是</option>
+                    <option value={2}>否</option>
+                </select>
+            </div>
+        )
+    }
+
     const handleItemPoolsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
         setFilter((prevFilter) => {
@@ -154,10 +184,15 @@ export default function Filter({ setFilter, Filter, onFilterChange, filterNum }:
     return (
         <Box className="flex flex-col justify-between items-center space-y-6">
             <p className="text-2xl inline-flex">还剩下<p className="text-red-500 text-2xl font-bold">{filterNum}</p>个道具</p>
-            <div className="flex items-center space-x-4">
-                <StartValueSelect />
-                <EndValueSelect />
-                <CanBeLostSelect />
+            <div className="flex flex-col items-center space-x-4 space-y-4">
+                <div className="flex items-center space-x-10">
+                    <StartValueSelect />
+                    <EndValueSelect />
+                </div>
+                <div className="flex items-center space-x-10">
+                    <CanBeLostSelect />
+                    <IsActiveSelect />
+                </div>
             </div>
             <ItemPoolsSelect />
         </Box>

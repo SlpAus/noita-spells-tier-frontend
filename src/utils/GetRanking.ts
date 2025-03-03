@@ -12,7 +12,8 @@ export async function GetRanking(type: string, filter: filter): Promise<ranking[
             startQuality: filter.startQuality,
             endQuality: filter.endQuality,
             canBeLost: filter.canBeLost,
-            itemPools: filter.itemPools.join(',')
+            itemPools: filter.itemPools.join(','),
+            isActive: filter.isActive
         }
     });
     return res.data;

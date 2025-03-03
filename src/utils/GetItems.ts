@@ -13,7 +13,8 @@ export async function GetItems(num: number, filter: filter): Promise<item[]> {
             startQuality: filter.startQuality,
             endQuality: filter.endQuality,
             canBeLost: filter.canBeLost,
-            itemPools: filter.itemPools.join(',')
+            itemPools: filter.itemPools.join(','),
+            isActive: filter.isActive
         }
     });
     return res.data;
