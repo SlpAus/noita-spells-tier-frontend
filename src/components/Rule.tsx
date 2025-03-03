@@ -10,6 +10,9 @@ export default function Rule() {
 
     return (
         <Box className="space-y-4">
+            <p className={`text-2xl font-bold text-red-500 animate-slide-fade`}>
+                3.3日更新：1. 现在可以通过域名访问本网站了<a href="https://vote.terras.su">https://vote.terras.su</a>  2. 添加了主动道具筛选功能，可以选择是否筛选主动道具了！
+            </p>
             <p className={`text-2xl font-bold text-red-300 animate-slide-fade`}>
                 新功能添加：1. 现在可以查看道具的1v1的对位数据了！但是由于本人的失误，丢失了许多数据，导致对位数据的数量和准确性目前还不足，还要靠大家多多投票了QAQ。
                 <br />2.现在排行榜可以按照分数 胜率 总数进行升序或降序排列了！大家查看最强最弱道具都不用翻到最下面了！并且点击两个排行榜的标题都可以切换排行榜的收缩展开状态了！<br />
