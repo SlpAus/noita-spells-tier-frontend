@@ -15,7 +15,8 @@ import Error from "./components/Error";
 import { GetItemRank } from "./utils/GetItemRank";
 import ItemRank from "./components/ItemRank";
 import BackTo, { BackToProps } from "./components/BackTo";
-import { vote, VOTEResult } from "./types/votingResult";
+import { VOTEResult } from "./types/votingResult";
+import MyData from "./components/MyData";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
@@ -139,8 +140,7 @@ function App() {
   }, []);
 
   const vote = async (VoteResult: VOTEResult) => {
-    const result = await SendVoting({ result: VoteResult });
-    if (result) {
+    SendVoting({ result: VoteResult }).then(() => {
       if (VoteResult === VOTEResult.NOBODY) {
         setLastVote(`哈哈，${ItemList[0].name}(${rank.find((item) => item.name === ItemList[0].name)?.rank}名)，${ItemList[1].name}(${rank.find((item) => item.name === ItemList[1].name)?.rank}名)没一个是人`);
       } else {
@@ -149,10 +149,15 @@ function App() {
         setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，于此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
       }
       GetTwoItem(filter);
-    } else {
-      setError("Failed to send vote");
-      GetTwoItem(filter);
-    }
+    }).catch((error) => {
+      console.error("Error post vote:", error);
+      if (error.response) {
+        const errorMessage = error.response.data.error
+        setError(errorMessage);
+      } else {
+        setError("无法投票，请刷新或稍后再试");
+      }
+    });
   };
   const ChoosenButtonP: ChooseButtonProps = {
     OnClick_1: () => vote(VOTEResult.LEFT),
@@ -165,6 +170,7 @@ function App() {
   const ruleRef = useRef<HTMLDivElement>(null);
   const attentionRef = useRef<HTMLDivElement>(null);
   const rankRef = useRef<HTMLDivElement>(null);
+  const myDataRef = useRef<HTMLDivElement>(null);
   const scrollToComponent = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref) {
       ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -175,6 +181,7 @@ function App() {
     { to: "筛选", toClick: () => scrollToComponent(filterRef) },
     { to: "对位榜单", toClick: () => scrollToComponent(itemRankRef) },
     { to: "道具排行榜", toClick: () => scrollToComponent(rankRef) },
+    { to: "个性化报告", toClick: () => scrollToComponent(myDataRef) },
   ];
 
   const backLists = !showBackToTop ? basebackList : [
@@ -211,6 +218,9 @@ function App() {
         </div>
         <div ref={itemRankRef}>
           <ItemRank onSelectRankItemChange={OnSelectItemChange} selectRank={selectRank || []} allItems={allItems} selectRankItem={selectRankItem} />
+        </div>
+        <div ref={myDataRef}>
+          <MyData allItems={allItems} totalrank={rank} />
         </div>
         <div ref={ruleRef}>
           <Rule />
