@@ -179,15 +179,16 @@ function App() {
 
   const basebackList: BackToProps[] = [
     { to: "筛选", toClick: () => scrollToComponent(filterRef) },
+    { to: "个性化报告", toClick: () => scrollToComponent(myDataRef) },
     { to: "对位榜单", toClick: () => scrollToComponent(itemRankRef) },
     { to: "道具排行榜", toClick: () => scrollToComponent(rankRef) },
-    { to: "个性化报告", toClick: () => scrollToComponent(myDataRef) },
   ];
 
   const backLists = !showBackToTop ? basebackList : [
     { to: "回到顶部", toClick: () => { window.scrollTo({ top: 0, behavior: 'smooth' }) } },
     ...basebackList
   ];
+
 
   return (
     <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.webp')] min-w-[54rem]  ">
@@ -216,11 +217,11 @@ function App() {
         <div ref={filterRef}>
           <Filter Filter={filter} setFilter={setFilter} onFilterChange={OnFilterChange} filterNum={fn} />
         </div>
-        <div ref={itemRankRef}>
-          <ItemRank onSelectRankItemChange={OnSelectItemChange} selectRank={selectRank || []} allItems={allItems} selectRankItem={selectRankItem} />
-        </div>
         <div ref={myDataRef}>
           <MyData allItems={allItems} totalrank={rank} />
+        </div>
+        <div ref={itemRankRef}>
+          <ItemRank onSelectRankItemChange={OnSelectItemChange} selectRank={selectRank || []} allItems={allItems} selectRankItem={selectRankItem} />
         </div>
         <div ref={ruleRef}>
           <Rule />

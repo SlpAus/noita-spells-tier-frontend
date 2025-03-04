@@ -1,19 +1,21 @@
-import { itemRank, ranking } from "../types/ranking";
+import { itemRank } from "../types/ranking";
 import { item } from "../types/item";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BACKEN_URL } from "../config";
 import Box from "./UI/Box";
 
-export default function ItemRank(props: { onSelectRankItemChange: (item: item | undefined) => void, selectRank: itemRank[], allItems: item[], selectRankItem: item | undefined }) {
-
-    // 单独某个道具的排行榜
+export default function ItemRank(props: {
+    onSelectRankItemChange: (item: item | undefined) => void,
+    selectRank: itemRank[],
+    allItems: item[],
+    selectRankItem: item | undefined
+}) {
+    // 搜索部分等保持不变……
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [isExpanded, setIsExpanded] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-    const itemsPerPage = 6;
-
+    const itemsPerPage = 4;
     const filteredItems = props.allItems.filter(item => item.name.includes(searchTerm));
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
@@ -25,7 +27,7 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchTerm(value.trim());
-        setCurrentPage(1); // Reset to first page on search term change
+        setCurrentPage(1); // 搜索变更时重置页码
         if (value === "") {
             props.onSelectRankItemChange(undefined);
         } else if (filteredItems.length === 1 && filteredItems[0].name === value) {
@@ -33,13 +35,7 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
         }
     };
 
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    const NotExpandSize = 5;
-
-    // 按照胜率（主）,总场(副)排序
+    // 排序部分
     props.selectRank.sort((a, b) => {
         if (sortOrder === "asc") {
             return a.winrate === b.winrate ? a.total - b.total : a.winrate - b.winrate;
@@ -49,25 +45,35 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
     });
 
     const toggleSortOrder = () => {
-        setSortOrder((prevOrder) => prevOrder === "asc" ? "desc" : "asc");
-    }
+        setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+    };
 
     const handlePageChange = (direction: "prev" | "next" | "first" | "end") => {
-        setCurrentPage((prevPage) => {
-            if (direction === "prev") {
-                return Math.max(prevPage - 1, 1);
-            } else if (direction === "next") {
-                return Math.min(prevPage + 1, totalPages);
-            } else if (direction === "first") {
-                return 1;
-            } else if (direction === "end") {
-                return totalPages;
-            }
-            return prevPage;
+        setCurrentPage(prev => {
+            if (direction === "prev") return Math.max(prev - 1, 1);
+            else if (direction === "next") return Math.min(prev + 1, totalPages);
+            else if (direction === "first") return 1;
+            else if (direction === "end") return totalPages;
+            return prev;
         });
     };
 
     const paginatedItems = filteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    // 针对详情列表采用懒加载：初始只显示一部分，滚动到底自动加载更多
+    const [rankingPage, setRankingPage] = useState(1);
+    const rankingPageSize = 100;  // 每次加载10条
+    const paginatedRankDetail = props.selectRank.slice(0, rankingPage * rankingPageSize);
+
+    const handleDetailsScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+        // 当滚动到底部10px以内时加载更多
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+            if (rankingPage * rankingPageSize < props.selectRank.length) {
+                setRankingPage(prev => prev + 1);
+            }
+        }
+    };
 
     return (
         <Box className="space-y-5">
@@ -94,7 +100,7 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
                 </ul>
             )}
             {totalPages > 1 && (
-                <div className="flex justify-center items-center  space-x-4">
+                <div className="flex justify-center items-center space-x-4">
                     <button
                         onClick={() => handlePageChange("prev")}
                         className={`px-3 py-1 border rounded ${currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-black'}`}
@@ -128,26 +134,31 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
             {props.selectRankItem && (
                 <div>
                     <div className="flex justify-between items-center px-10 py-5">
-                        <button onClick={toggleExpand}
-                            className="flex-1 text-center text-3xl rounded-2xl w-auto hover:bg-gray-200 transition-colors duration-300">
+                        <div className="flex-1 text-center text-3xl rounded-2xl w-auto hover:bg-gray-200 transition-colors duration-300">
                             {props.selectRankItem.name}对位榜单
+                        </div>
+                        <button
+                            onClick={() => props.onSelectRankItemChange(undefined)}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-300"
+                        >
+                            关闭
                         </button>
                     </div>
                     <div className="flex justify-between px-5 pt-5 rounded-xl">
                         <p className="text-2xl font-bold text-center w-1/5">排名</p>
                         <p className="text-2xl font-bold text-center w-1/5">名字</p>
                         <p className="text-2xl font-bold text-center w-1/5">胜场</p>
-                        <button onClick={toggleSortOrder} className="text-2xl font-bold text-center w-1/5">胜率 {sortOrder === "asc" ? "▲" : "▼"}</button>
+                        <button onClick={toggleSortOrder} className="text-2xl font-bold text-center w-1/5">
+                            胜率 {sortOrder === "asc" ? "▲" : "▼"}
+                        </button>
                         <p className="text-2xl font-bold text-center w-1/5">总场</p>
                     </div>
-                    <div className="flex flex-col rounded-xl">
-                        {props.selectRank.map((item, index) => {
-                            if (!isExpanded && index >= NotExpandSize) {
-                                return null;
-                            }
+                    {/* 修改详情列表为固定高度、overflow-y-auto，并监听滚动事件实现懒加载 */}
+                    <div className="flex flex-col rounded-xl h-80 overflow-y-scroll" onScroll={handleDetailsScroll}>
+                        {paginatedRankDetail.map((item, index) => {
                             const bgColor = item.winrate > 0.5 ? "bg-red-400" : "bg-green-400";
                             return (
-                                <div key={index} className={` flex justify-between px-5 py-0.5 ${bgColor}`}>
+                                <div key={index} className={`flex justify-between px-5 py-0.5 ${bgColor}`}>
                                     <p className="text-xl text-center w-1/5">{index + 1}</p>
                                     <p className="text-xl text-center w-1/5">{item.name}</p>
                                     <p className="text-xl text-center w-1/5">{item.wincount.toFixed(1)}</p>
@@ -157,14 +168,6 @@ export default function ItemRank(props: { onSelectRankItemChange: (item: item | 
                             );
                         })}
                     </div>
-                    <button
-                        onClick={toggleExpand}
-                        className="w-full flex justify-center items-center px-10 py-1 border-t-2 border-gray-200 hover:bg-gray-100 transition-colors duration-300"
-                    >
-                        <p className="text-xl font-bold">
-                            {isExpanded ? "▲ 收起" : "▼ 展开"}
-                        </p>
-                    </button>
                 </div>
             )}
         </Box>
