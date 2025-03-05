@@ -18,7 +18,7 @@ const RankingVS = (props: { left: image, right: image, ChooseProps: ChooseButton
                     <Image image_prop={props.left} />
                 </button>
                 <div className="flex flex-col items-center space-y-16 w-1/3">
-                    <img src="/images/vs.png"></img>
+                    <img src="/images/vs.webp"></img>
                     <div className="flex flex-col items-center space-y-6">
                         <p className="text-2xl text-red-500 font-bold text-center">{props.LastVote}</p>
                     </div>

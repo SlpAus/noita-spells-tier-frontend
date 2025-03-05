@@ -17,6 +17,7 @@ import ItemRank from "./components/ItemRank";
 import BackTo, { BackToProps } from "./components/BackTo";
 import { VOTEResult } from "./types/votingResult";
 import MyData from "./components/MyData";
+import PreciseVote from "./components/PreciseVote";
 // import MovingGif from "./components/MovingGif";
 
 function App() {
@@ -222,6 +223,9 @@ function App() {
         </div>
         <div ref={itemRankRef}>
           <ItemRank onSelectRankItemChange={OnSelectItemChange} selectRank={selectRank || []} allItems={allItems} selectRankItem={selectRankItem} />
+        </div>
+        <div>
+          <PreciseVote allItems={allItems} />
         </div>
         <div ref={ruleRef}>
           <Rule />
