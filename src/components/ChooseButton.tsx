@@ -15,7 +15,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                 onClick={props.prop.OnClick_1}
                 className="group bg-red-400 px-4 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-blue-400 hover:text-white transition-all duration-300">
                 <div className=" flex items-center space-x-2 justify-center">
-                    <img src="/images/md.png" alt="111" className="-rotate-90 group-hover:rotate-0 transition-all duration-300"></img>
+                    <img src="/images/md.webp" alt="111" className="-rotate-90 group-hover:rotate-0 transition-all duration-300"></img>
                     <p className="text-xl">我寻思左边能行</p>
                 </div>
             </button>
@@ -24,7 +24,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                     onClick={props.prop.OnClick_3}
                     className="group bg-orange-700 text-white px-1 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-gray-400 hover:text-black transition-all duration-300">
                     <div className=" flex items-center space-x-2 justify-center">
-                        <img src="/images/db.png" alt="111" className="group-hover:scale-[400%] transition-all duration-300"></img>
+                        <img src="/images/db.webp" alt="111" className="group-hover:scale-[400%] transition-all duration-300"></img>
                         <p className="text-base">还有人类吗？</p>
                     </div>
                 </button>
@@ -32,7 +32,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                     onClick={props.prop.OnClick_4}
                     className="group bg-green-600 px-1 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-yellow-400 hover:text-white transition-all duration-300">
                     <div className=" flex items-center space-x-1 justify-center">
-                        <img src="/images/wl.png" alt="111" className="group-hover:rotate-180 transition-all duration-300"></img>
+                        <img src="/images/wl.webp" alt="111" className="group-hover:rotate-180 transition-all duration-300"></img>
                         <p className="text-base">你问我？我怎么知道？</p>
                     </div>
                 </button>
@@ -43,7 +43,7 @@ const ChooseButton = (props: { prop: ChooseButtonProps }) => {
                 onClick={props.prop.OnClick_2}
                 className="group bg-blue-400 px-4 py-3 rounded-md shadow-lg hover:shadow-xl hover:bg-red-400 hover:text-white transition-all duration-300">
                 <div className=" flex items-center space-x-2 justify-center">
-                    <img src="/images/lhh.png" alt="111" className="rotate-90 group-hover:rotate-0 transition-all duration-300"></img>
+                    <img src="/images/lhh.webp" alt="111" className="rotate-90 group-hover:rotate-0 transition-all duration-300"></img>
                     <p className="text-xl">显然是右边厉害</p>
                 </div>
             </button>

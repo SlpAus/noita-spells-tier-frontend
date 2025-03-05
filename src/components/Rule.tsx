@@ -11,7 +11,15 @@ export default function Rule() {
     return (
         <Box className="space-y-4">
             <p className={`text-xl font-bold text-red-500 animate-slide-fade`}>
-                服务器维护中，正在上线新功能！
+                3.5日更新：1. 更换了香港服务器并且获得了一个域名，vote.qiuy.cloud，可以使用域名访问啦！<br></br>
+                2. 添加了定向投票功能，可以进行定向投票啦！但是有以下限制：1. 每个IP每小时最多投票三次 2. 不能投票给相同的道具
+                3. 只能让当前排名更低的道具获胜，并且对于前50名的道具，排名差不能超过20 <br></br>
+                4. ELO机制的本意是为了在样本量较低时，道具之间能快速拉开差分，但是现在样本量已经足够，ELO机制反而拖累了道具之间的差距，所以我们将会逐步减少ELO机制的影响，最终取消ELO机制，让道具的排名更加稳定。
+            </p>
+            <p className={`text-xl font-bold text-red-300 animate-slide-fade`}>
+                3.4日更新： 1. 修改了排行榜样式，并且没有一个鼠标滚轮受到伤害！<br></br>
+                2. 修改了后端API，你们的投票更快更准更难刷票了！(大概)<br></br>
+                3. 请大家不要乱投票不要乱投票不要乱投票，务必做出理性的选择!!!!让每个道具落在他该在的地方上！
             </p>
 
             <p className={`text-xl font-bold animate-slide-fade`}>
