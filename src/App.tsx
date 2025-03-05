@@ -193,6 +193,9 @@ function App() {
   return (
     <div className="bg-[length:100%] bg-no-repeat bg-[url('../public/images/bg.webp')] min-w-[54rem]  ">
       <div className="flex flex-col justify-center items-center text-center space-x-10 space-y-10">
+        <div ref={ruleRef}>
+          <Rule />
+        </div>
         {error && <Error error={error} onClick={() => { setError(null) }} />}
         {ItemList.length > 0 && (
           <RankingVS
@@ -223,9 +226,7 @@ function App() {
         <div ref={itemRankRef}>
           <ItemRank onSelectRankItemChange={OnSelectItemChange} selectRank={selectRank || []} allItems={allItems} selectRankItem={selectRankItem} />
         </div>
-        <div ref={ruleRef}>
-          <Rule />
-        </div>
+
         <div ref={attentionRef}>
           <Attention />
         </div>
