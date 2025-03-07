@@ -147,7 +147,7 @@ function App() {
       } else {
         const winnerItem = VoteResult === VOTEResult.LEFT ? ItemList[0] : ItemList[1];
         const loserItem = VoteResult === VOTEResult.LEFT ? ItemList[1] : ItemList[0];
-        setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，于此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
+        setLastVote(`成功投票给${winnerItem?.name}(${rank.find((item) => item.name === winnerItem?.name)?.rank}名)，与此同时${loserItem?.name}(${rank.find((item) => item.name === loserItem?.name)?.rank}名)`);
       }
       GetTwoItem(filter);
     }).catch((error) => {
