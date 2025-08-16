@@ -5,9 +5,22 @@ import { BACKEN_URL } from "../config";
 import { GetPairAPIResponseSchema } from "../types/zodSchemas";
 import { z, ZodError } from "zod";
 
-export async function GetSpellPair(): Promise<GetPairAPIResponse> {
+interface ExcludeParams {
+    excludeA: string;
+    excludeB: string;
+}
+
+export async function GetSpellPair(params?: ExcludeParams): Promise<GetPairAPIResponse> {
     try {
-        const res = await axiosInstance.get(`${BACKEN_URL}/api/spells/pair`);
+        let url = `${BACKEN_URL}/api/spells/pair`;
+        if (params) {
+            const queryParams = new URLSearchParams({
+                excludeA: params.excludeA,
+                excludeB: params.excludeB,
+            }).toString();
+            url = `${url}?${queryParams}`;
+        }
+        const res = await axiosInstance.get(url);
         const validatedData = GetPairAPIResponseSchema.parse(res.data);
         return validatedData;
     } catch (error) {

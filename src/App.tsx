@@ -19,8 +19,11 @@ function App() {
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [rank, setRank] = useState<RankedSpell[]>([]);
 
-  const GetPair = () => {
-    GetSpellPair()
+  const GetPair = (pair?: GetPairAPIResponse | null) => {
+    const params = pair
+      ? { excludeA: pair.spellA.id, excludeB: pair.spellB.id }
+      : undefined;
+    GetSpellPair(params)
       .then((res) => {
         setCurrentPair(res);
       })
@@ -70,14 +73,18 @@ function App() {
     };
 
     SendVoting(payload).then(() => {
-      if (result === VOTEResult.DRAW) {
-        setLastVote(`你认为 ${currentPair.spellA.name} (排名: ${currentPair.spellA.rank}) 和 ${currentPair.spellB.name} (排名: ${currentPair.spellB.rank}) 都很糟糕！`);
-      } else {
-        const winner = result === VOTEResult.A_WINS ? currentPair.spellA : currentPair.spellB;
-        const loser = result === VOTEResult.A_WINS ? currentPair.spellB : currentPair.spellA;
-        setLastVote(`你选择了 ${winner.name} (排名: ${winner.rank}) 而不是 ${loser.name} (排名: ${loser.rank})`);
+      switch (result) {
+        case VOTEResult.A_WINS:
+        case VOTEResult.B_WINS:
+          const winner = result === VOTEResult.A_WINS ? currentPair.spellA : currentPair.spellB;
+          const loser = result === VOTEResult.A_WINS ? currentPair.spellB : currentPair.spellA;
+          setLastVote(`你选择了 ${winner.name} (排名: ${winner.rank}) 而不是 ${loser.name} (排名: ${loser.rank})`);
+          break;
+        case VOTEResult.DRAW:
+          setLastVote(`你认为 ${currentPair.spellA.name} (排名: ${currentPair.spellA.rank}) 和 ${currentPair.spellB.name} (排名: ${currentPair.spellB.rank}) 都很糟糕！`);
+          break;
       }
-      GetPair(); // Fetch a new pair after voting
+      GetPair(currentPair); // Fetch a new pair after voting
     }).catch((error) => {
       console.error("Error post vote:", error);
       if (error.response?.data?.error) {
@@ -94,7 +101,7 @@ function App() {
     OnClick_1: () => vote(VOTEResult.A_WINS),
     OnClick_2: () => vote(VOTEResult.B_WINS),
     OnClick_3: () => vote(VOTEResult.DRAW),
-    OnClick_4: () => GetPair(),
+    OnClick_4: () => vote(VOTEResult.SKIP),
   }
   const rankRef = useRef<HTMLDivElement>(null);
   const myDataRef = useRef<HTMLDivElement>(null);
