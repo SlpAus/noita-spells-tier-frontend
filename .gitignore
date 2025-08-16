@@ -1,6 +1,9 @@
 # dependencies
 /node_modules
 
+# deployment
+/build
+
 # VSCode files
 .vscode/
 .history/

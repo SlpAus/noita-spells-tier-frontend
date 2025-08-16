@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Box from "./UI/Box";
 import { GetReport } from "../utils/GetReport";
-import { UserReport, HighlightVote, MilestoneVote, EncounterRecord, SpellNameRank } from "../types/report";
+import { UserReport, MilestoneVote, EncounterRecord, SpellNameRank } from "../types/report";
 import { VOTEResult } from "../types/votingResult";
 
 const formatDateToDay = (dateString: string) => new Date(dateString).toLocaleDateString();

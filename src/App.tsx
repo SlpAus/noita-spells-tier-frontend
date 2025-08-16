@@ -3,7 +3,7 @@ import { ChooseButtonProps } from "./components/ChooseButton";
 import { useState, useEffect, useRef } from "react";
 import { GetSpellPair } from "./utils/GetSpellPair";
 import { SendVoting } from "./utils/SendVoting";
-import { PairedSpell, RankedSpell } from "./types/spell";
+import { RankedSpell } from "./types/spell";
 import Rank from "./components/Rank";
 import { GetRanking } from "./utils/GetRanking";
 import Error from "./components/Error";

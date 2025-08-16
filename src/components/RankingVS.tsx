@@ -14,11 +14,9 @@ interface RankingVSProps {
 }
 
 const SpellDisplay = ({ spell, onVote, className }: { spell: PairedSpell, onVote: () => void, className?: string }) => (
-    <button type="button" onClick={onVote} className={`w-full flex flex-col h-full p-4 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors ${className}`}>
-        <div className="flex-grow flex items-center justify-center">
-            <SpellIcon imageUrl={spell.imageUrl} type={spell.type} size={80} />
-        </div>
-        <div className="text-center h-24 flex flex-col justify-end">
+    <button type="button" onClick={onVote} className={`w-full h-full p-4 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors grid grid-rows-[1fr_auto] place-items-center ${className}`}>
+        <SpellIcon imageUrl={spell.imageUrl} type={spell.type} size={80} />
+        <div className="text-center pt-4">
             <p className="text-xl font-bold">{spell.name}</p>
             <p className="text-sm text-gray-400 mt-1">{spell.description}</p>
         </div>
