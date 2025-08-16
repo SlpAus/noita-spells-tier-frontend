@@ -8,8 +8,8 @@ const Link = ({ href, children }: { href: string, children: React.ReactNode }) =
 
 export default function Notice() {
     return (
-        <Box className="w-full max-w-3xl text-left text-base p-6 space-y-2">
-            <h3 className="text-xl font-bold text-center">欢迎来到《Noita》法术投票箱！</h3>
+        <Box className="w-full max-w-3xl text-left text-xl p-6 space-y-4">
+            <h3 className="text-3xl font-bold text-center">欢迎来到《Noita》法术投票箱！</h3>
             <p>在这里，每次会有一对法术等待你的抉择。</p>
             <ul className="list-disc list-inside pl-4 space-y-1 my-2">
                 <li><strong>投票：</strong>点击左右的按钮或法术图标，为你更喜欢的法术投票。</li>

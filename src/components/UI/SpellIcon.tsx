@@ -5,16 +5,17 @@ interface SpellIconProps {
   type: number;
   alt?: string;
   size?: number; // Optional size prop, defaults to 40px
+  className?: string;
 }
 
-const SpellIcon: React.FC<SpellIconProps> = ({ imageUrl, type, alt = 'spell icon', size = 40 }) => {
+const SpellIcon: React.FC<SpellIconProps> = ({ imageUrl, type, alt = 'spell icon', size = 40, className }) => {
   const borderUrl = `/images/spell_borders/${type}.png`;
   const containerSize = { width: `${size}px`, height: `${size}px` };
   const imageSize = { width: `${size / 2}px`, height: `${size / 2}px` };
 
   return (
     <div
-      className="relative flex items-center justify-center flex-shrink-0"
+      className={`relative flex items-center justify-center flex-shrink-0 ${className}`}
       style={{ ...containerSize, backgroundColor: '#222933' }}
     >
       {/* Spell Image */}

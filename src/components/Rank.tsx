@@ -33,7 +33,7 @@ const getTierColor = (tier: Tier): string => {
 export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], title: string, onRefresh: () => void }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // Default to asc for rank
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc"); // Default to desc for rankScore
     const [sortBy, setSortBy] = useState<SortCriteria>("rankScore");
 
     // Add originalIndex and tier to each spell
@@ -54,16 +54,35 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
 
     const sortedRank = [...rankedSpellsWithMeta].sort((a, b) => {
         const order = sortOrder === "asc" ? 1 : -1;
+
+        let comparison = 0;
         switch (sortBy) {
-            case "score": return (a.score - b.score) * order;
+            case "score":
+                comparison = a.score - b.score;
+                break;
             case "winRate":
                 const winRateA = a.total > 0 ? a.win / a.total : 0;
                 const winRateB = b.total > 0 ? b.win / b.total : 0;
-                return (winRateA - winRateB) * order;
-            case "total": return (a.total - b.total) * order;
+                comparison = winRateA - winRateB;
+                break;
+            case "total":
+                comparison = a.total - b.total;
+                break;
             case "rankScore":
-            default: return (a.originalIndex - b.originalIndex) * order; // Sort by original rank for rankScore
+                comparison = a.rankScore - b.rankScore;
+                break;
+            default:
+                // This should not be reached with current types, but as a fallback
+                return b.originalIndex - a.originalIndex;
         }
+
+        // If primary criteria are different, sort by them
+        if (comparison !== 0) {
+            return comparison * order;
+        }
+
+        // Otherwise, use original rank as a tie-breaker (always ascending)
+        return (b.originalIndex - a.originalIndex) * order;
     });
 
     const NotExpandSize = 10;

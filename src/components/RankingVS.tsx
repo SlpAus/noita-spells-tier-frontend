@@ -15,8 +15,8 @@ interface RankingVSProps {
 
 const SpellDisplay = ({ spell, onVote, className }: { spell: PairedSpell, onVote: () => void, className?: string }) => (
     <button type="button" onClick={onVote} className={`w-full h-full p-4 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors grid grid-rows-[1fr_auto] place-items-center ${className}`}>
-        <SpellIcon imageUrl={spell.imageUrl} type={spell.type} size={80} />
-        <div className="text-center pt-4">
+        <SpellIcon imageUrl={spell.imageUrl} type={spell.type} size={80} className="justify-self-center" />
+        <div className="w-full text-center pt-4 self-end">
             <p className="text-xl font-bold">{spell.name}</p>
             <p className="text-sm text-gray-400 mt-1">{spell.description}</p>
         </div>
@@ -27,7 +27,7 @@ const RankingVS = ({ left, right, ChooseProps, LastVote }: RankingVSProps) => {
     return (
         <Box className="flex flex-col h-[40rem] items-center justify-center space-y-6">
             <Title />
-            <div className='grid grid-cols-8 gap-x-4 items-stretch justify-center h-[24rem]'>
+            <div className='w-full grid grid-cols-8 gap-x-4 items-stretch justify-center h-[24rem]'>
                 <SpellDisplay spell={left} onVote={ChooseProps.OnClick_1} className="col-start-2 col-span-2" />
                 <div className="flex flex-col items-center justify-center pt-8 col-span-2">
                     <img
