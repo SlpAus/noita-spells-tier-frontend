@@ -1,21 +1,22 @@
 import axiosInstance from "../axiosConfig";
-import { ranking } from "../types/ranking";
+import { RankedSpell } from "../types/spell";
 import { BACKEN_URL } from "../config";
-import { filter, itemPools } from "../types/filter";
+import { RankingSchema } from "../types/zodSchemas";
+import { z, ZodError } from "zod";
 
-// get /api/rank/getRanking?type=XXX&itemPools=A,B,C...&startQuality=1&endQuality=2&canBeLost=true
-
-export async function GetRanking(type: string, filter: filter): Promise<ranking[]> {
-    const res = await axiosInstance.get(`${BACKEN_URL}/api/rank/getRanking`, {
-        params: {
-            type: type,
-            startQuality: filter.startQuality,
-            endQuality: filter.endQuality,
-            canBeLost: filter.canBeLost,
-            itemPools: filter.itemPools.join(','),
-            isActive: filter.isActive
+export async function GetRanking(): Promise<RankedSpell[]> {
+    try {
+        const res = await axiosInstance.get(`${BACKEN_URL}/api/spells/ranking`);
+        // Validate the response data with Zod
+        const validatedData = RankingSchema.parse(res.data);
+        return validatedData;
+    } catch (error) {
+        if (error instanceof ZodError) {
+            console.error("Zod validation error in GetRanking:", z.treeifyError(error));
+            throw new Error("从服务器收到的排行榜数据格式不正确。");
         }
-    });
-    return res.data;
+        // Re-throw other errors
+        throw error;
+    }
 }
 

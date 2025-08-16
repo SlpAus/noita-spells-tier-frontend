@@ -1,12 +1,44 @@
-# 以撒的结合道具投票箱
+# Noita法术投票箱
 
-前端部分:React + Typescript + TailwindCSS
+一个基于社区投票的《Noita》法术排名系统。
 
+**前端技术栈**: React, TypeScript, Tailwind CSS
 
-# TODO
+---
 
-+ 道具池筛选机制
+## 快速开始
 
-+ 回到顶部
+### 依赖环境
 
-+ 加一个看板（娘？）评价选择，太变态了考虑召唤马手抓走你的鼠标
+* **Node.js** (版本 16+)
+* **npm** (通常随 Node.js 一起安装)
+
+---
+
+### 运行应用
+
+1. **安装依赖**:
+
+```bash
+npm install
+```
+
+2. **启动开发服务器**:
+
+```bash
+npm start
+```
+
+应用将在 `http://localhost:3000` 上运行。
+
+---
+
+### 配置
+
+应用的核心配置位于 `.env.development` 和 `.env.production` 两个文件中。
+
+* **`REACT_APP_BACKEND_URL`**: 后端服务的地址。默认为 `http://localhost:8080`。
+
+* **`REACT_APP_FRONTEND_URL`**: 前端服务的地址。默认为 `http://localhost:3000`。
+
+在连接到不同的后端环境时，请相应地更新环境变量文件。

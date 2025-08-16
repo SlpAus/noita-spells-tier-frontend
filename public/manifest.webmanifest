@@ -1,0 +1,15 @@
+{
+  "short_name": "Spell Tier",
+  "name": "Noita Spell Tier",
+  "icons": [
+    {
+      "src": "noita.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
