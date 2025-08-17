@@ -103,8 +103,10 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
 
     return (
         <Box>
-            <div className="relative flex justify-center items-center px-10 py-5">
-                <h3 className="text-4xl font-bold">{title}</h3>
+            <div className="relative flex justify-center items-center">
+                <button type="button" onClick={toggleExpand} className="w-full flex justify-center items-center px-10 py-5 hover:bg-gray-600 transition-colors duration-300">
+                    <h3 className="text-4xl font-bold">{isExpanded ? "[−]" : "[+]"} {title}</h3>
+                </button>
                 <button type="button" onClick={handleRefresh} className="absolute right-10 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-300" disabled={isRefreshing}>
                     {isRefreshing ? "刷新中..." : "刷新"}
                 </button>
@@ -144,7 +146,7 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
                     );
                 })}
             </div>
-            <button type="button" onClick={toggleExpand} className="w-full flex justify-center items-center px-10 py-2 border-t-2 border-gray-600 hover:bg-gray-700 transition-colors duration-300">
+            <button type="button" onClick={toggleExpand} className="w-full flex justify-center items-center px-10 py-2 border-t-2 border-gray-600 hover:bg-gray-600 transition-colors duration-300">
                 <p className="text-xl font-bold">
                     {isExpanded ? "▲ 收起" : `▼ 展开 (显示 ${Math.min(NotExpandSize, sortedRank.length)}/${sortedRank.length} 条)`}
                 </p>
