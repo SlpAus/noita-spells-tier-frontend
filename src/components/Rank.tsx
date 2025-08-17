@@ -138,7 +138,7 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
                             <p className="text-center col-span-2">{item.score.toFixed(1)}</p>
                             <div className="text-center col-span-2">
                                 <p>{winRate.toFixed(1)}%</p>
-                                <p className="text-xs text-gray-400">({item.total})</p>
+                                <p className="text-xs text-gray-400">({item.total.toFixed(2)})</p>
                             </div>
                         </div>
                     );

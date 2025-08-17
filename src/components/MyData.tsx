@@ -63,12 +63,12 @@ const BasicStatsSection = ({ report }: { report: UserReport }) => {
         if (communityDecisionRate != null) {
             const communityRate = communityDecisionRate * 100;
             if (userRate >= communityRate) {
-                return <p>当面对艰难抉择时，你有 <span className="font-bold">{userRate.toFixed(1)}%</span> 的倾向做出准确的判断，这份果决超过了社区 <span className="font-bold">{communityRate.toFixed(1)}%</span> 的平均水平。与其犹豫不决，不如仗剑直言。</p>;
+                return <p>当面对艰难抉择时，你有 <span className="font-bold">{userRate.toFixed(1)}%</span> 的倾向给出明确的判断，这份果决超过了社区 <span className="font-bold">{communityRate.toFixed(1)}%</span> 的平均水平。与其犹豫不决，不如仗剑直言。</p>;
             } else {
                 return <p>举棋不定间，自有深思熟虑。你有 <span className="font-bold">{userRate.toFixed(1)}%</span> 的倾向给出明确的判断，低于 <span className="font-bold">{communityRate.toFixed(1)}%</span> 的社区平均值。相较于一言蔽之，你更愿意在充分的权衡中，看到法术无限的可能。</p>;
             }
         }
-        return <p>当面对艰难抉择时，你有 <span className="font-bold">{userRate.toFixed(1)}%</span> 的倾向做出准确的判断。与其犹豫不决，不如仗剑直言。</p>;
+        return <p>当面对艰难抉择时，你有 <span className="font-bold">{userRate.toFixed(1)}%</span> 的倾向给出明确的判断。与其犹豫不决，不如仗剑直言。</p>;
     };
 
     return (
@@ -97,7 +97,7 @@ const TendenciesSection = ({ report }: { report: UserReport }) => {
         if (upsetTendency == null) return null;
         const upsetRate = upsetTendency * 100;
         if (upsetRate < 50) {
-            return <p>你的以弱胜强指数为 <span className="font-bold">{upsetRate.toFixed(1)}%</span>。你对法术做出的评判客观而准确，在一定程度上，你对法术强度的理解可以反映玩家群体的观点。</p>;
+            return <p>你的以弱胜强指数为 <span className="font-bold">{upsetRate.toFixed(1)}%</span>。你对法术做出的评判客观而稳健，在一定程度上，你对法术强度的理解可以反映玩家群体的观点。</p>;
         } else {
             return <p>你的以弱胜强指数为 <span className="font-bold">{upsetRate.toFixed(1)}%</span>。比起大众眼中的强者，你似乎更热衷于挖掘那些被低估的法术所蕴含的潜能。你的每一次选择，都在为未来的无限可能发声。</p>;
         }
@@ -148,36 +148,36 @@ const MilestoneVoteDisplay = ({ vote }: { vote: MilestoneVote }) => {
         case VOTEResult.A_WINS:
         case VOTEResult.B_WINS:
         const winner = vote.result === VOTEResult.A_WINS ? spellA : spellB;
-        const loser = vote.result === VOTEResult.A_WINS ? spellB : winner;
-            voteActionText = <>将票投给了 <span className="font-bold">{winner.name}</span>，助其战胜 <span className="font-bold">{loser.name}</span>。</>;
+        const loser = vote.result === VOTEResult.A_WINS ? spellB : spellA;
+            voteActionText = <>将票投给了 <span className="font-bold">{winner.name}</span>，助其战胜 <span className="font-bold">{loser.name}</span></>;
             break;
         case VOTEResult.DRAW:
-            voteActionText = <>判定 <span className="font-bold">{spellA.name}</span> 与 <span className="font-bold">{spellB.name}</span> 在此战中两败俱伤。</>;
+            voteActionText = <>判定 <span className="font-bold">{spellA.name}</span> 与 <span className="font-bold">{spellB.name}</span> 在此战中两败俱伤</>;
             break;
         case VOTEResult.SKIP:
-            voteActionText = <>选择为 <span className="font-bold">{spellA.name}</span> 和 <span className="font-bold">{spellB.name}</span> 的对决留下悬念。</>;
+            voteActionText = <>选择为 <span className="font-bold">{spellA.name}</span> 和 <span className="font-bold">{spellB.name}</span> 的对决留下悬念</>;
             break;
     }
 
     let milestoneText;
     switch (vote.voteNumber) {
         case 25:
-            milestoneText = <>你的旅程开启新篇。在你的第 <span className="font-bold">25</span> 次投票里，你{voteActionText}</>;
+            milestoneText = <>你的旅程开启新篇。在你的第 <span className="font-bold">25</span> 次投票里，你{voteActionText}。</>;
             break;
         case 50:
-            milestoneText = <>在第 <span className="font-bold">50</span> 次投票中，你{voteActionText}半百之数，见证了你日益敏锐的洞察力。</>;
+            milestoneText = <>在第 <span className="font-bold">50</span> 次投票中，你{voteActionText}。这半百之数，见证了你日益敏锐的洞察力。</>;
             break;
         case 100:
-            milestoneText = <>在第 <span className="font-bold">100</span> 次投票这个值得纪念的时刻，你{voteActionText}百炼成钢，你的每一次投票都掷地有声。</>;
+            milestoneText = <>在第 <span className="font-bold">100</span> 次投票这个值得纪念的时刻，你{voteActionText}。百炼成钢，你的每一次投票都掷地有声。</>;
             break;
         case 250:
-            milestoneText = <>你完成了第 <span className="font-bold">250</span> 次投票，{voteActionText}你的判断，已在此间留下深刻的印记。</>;
+            milestoneText = <>你完成了第 <span className="font-bold">250</span> 次投票，{voteActionText}。你的判断，已在此间留下深刻的印记。</>;
             break;
         case 500:
-            milestoneText = <>你到达了第 <span className="font-bold">500</span> 次投票这一历史性时刻，{voteActionText}数不尽的抉择，沉淀为你对法术世界的深刻理解。</>;
+            milestoneText = <>你到达了第 <span className="font-bold">500</span> 次投票这一历史性时刻，{voteActionText}。无数的抉择，沉淀为你对法术世界的深刻理解。</>;
             break;
         case 1000:
-            milestoneText = <>这已然是一部由你书写的传奇。在这不啻奇迹的第 <span className="font-bold">1000</span> 次投票里，你{voteActionText}</>;
+            milestoneText = <>这已然是一部由你书写的传奇。在这不啻奇迹的第 <span className="font-bold">1000</span> 次投票里，你{voteActionText}。</>;
             break;
         default:
             return null;
