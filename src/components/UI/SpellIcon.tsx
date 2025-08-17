@@ -11,7 +11,7 @@ interface SpellIconProps {
 const SpellIcon: React.FC<SpellIconProps> = ({ imageUrl, type, alt = 'spell icon', size = 40, className }) => {
   const borderUrl = `/images/spell_borders/${type}.png`;
   const containerSize = { width: `${size}px`, height: `${size}px` };
-  const imageSize = { width: `${size / 2}px`, height: `${size / 2}px` };
+  const imageSize = { width: `${size * 0.8}px`, height: `${size * 0.8}px` };
 
   return (
     <div
