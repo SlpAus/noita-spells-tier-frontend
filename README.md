@@ -4,7 +4,7 @@
 
 **前端技术栈**: React, TypeScript, Tailwind CSS
 
----
+**后端项目**: [SlpAus/noita-spells-tier-backend](https://github.com/SlpAus/noita-spells-tier-backend)
 
 ## 快速开始
 
