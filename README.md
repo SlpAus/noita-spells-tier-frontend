@@ -2,6 +2,8 @@
 
 一个基于社区投票的《Noita》法术排名系统。
 
+现已初步拓展以支持法术投票与天赋投票双模式运行。
+
 **前端技术栈**: React, TypeScript, Tailwind CSS
 
 **后端项目**: [SlpAus/noita-spells-tier-backend](https://github.com/SlpAus/noita-spells-tier-backend)
@@ -37,7 +39,9 @@ npm start
 
 应用的核心配置位于 `.env.development` 和 `.env.production` 两个文件中。
 
-* **`REACT_APP_BACKEND_URL`**: 后端服务的地址。默认为 `http://localhost:8080`。
+* **`REACT_APP_SPELL_BACKEND_URL`**: 法术后端服务的地址。默认为 `http://localhost:8080`。
+
+* **`REACT_APP_PERK_BACKEND_URL`**: 天赋后端服务的地址。默认为 `http://localhost:8081`。
 
 * **`REACT_APP_FRONTEND_URL`**: 前端服务的地址。默认为 `http://localhost:3000`。
 

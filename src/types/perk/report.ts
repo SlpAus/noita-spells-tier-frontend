@@ -1,4 +1,4 @@
-import { VOTEResult } from "./votingResult";
+import { VOTEResult } from "../votingResult";
 
 // --- Root Report Type ---
 
@@ -12,10 +12,10 @@ export interface UserReport {
     communityDecisionRate?: number;
     communityConsistencyIndex?: number;
     upsetTendency?: number;
-    mostChosen?: MostChosenSpell;
-    highestWinRate?: HighestWinRateSpell;
-    chosenOne?: ContrarianSpell;
-    nemesis?: ContrarianSpell;
+    mostChosen?: MostChosenPerk;
+    highestWinRate?: HighestWinRatePerk;
+    chosenOne?: ContrarianPerk;
+    nemesis?: ContrarianPerk;
     mostSubversive?: HighlightVote;
     firstVote?: MilestoneVote;
     milestones?: MilestoneVote[];
@@ -32,26 +32,26 @@ export interface ChoiceCounts {
     skip: number;
 }
 
-export interface MostChosenSpell {
+export interface MostChosenPerk {
     id: string;
     name: string;
     voteCount: number;
 }
 
-export interface HighestWinRateSpell {
+export interface HighestWinRatePerk {
     id: string;
     name: string;
     winRate: number;
 }
 
-export interface ContrarianSpell {
+export interface ContrarianPerk {
     id: string;
     name: string;
     winRate: number;
     communityScoreRate: number;
 }
 
-export interface SpellNameRank {
+export interface PerkNameRank {
     id: string;
     name: string;
     rank?: number;
@@ -59,15 +59,15 @@ export interface SpellNameRank {
 
 export interface HighlightVote {
     voteNumber: number;
-    spellA: SpellNameRank;
-    spellB: SpellNameRank;
+    perkA: PerkNameRank;
+    perkB: PerkNameRank;
     result: VOTEResult;
 }
 
 export interface MilestoneVote {
     voteNumber: number;
-    spellA: SpellNameRank;
-    spellB: SpellNameRank;
+    perkA: PerkNameRank;
+    perkB: PerkNameRank;
     result: VOTEResult;
     date: string; // ISO 8601 date string
 }
@@ -80,8 +80,8 @@ export interface ActivityRecord {
 
 export interface EncounterRecord {
     voteNumber: number;
-    spellA: SpellNameRank;
-    spellB: SpellNameRank;
+    perkA: PerkNameRank;
+    perkB: PerkNameRank;
     specialA: boolean;
     specialB: boolean;
     result: VOTEResult;

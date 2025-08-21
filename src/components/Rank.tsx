@@ -1,14 +1,37 @@
-import { RankedSpell } from "../types/spell";
+import { RankedSpell } from "../types/spell/spell";
+import { RankedPerk } from "../types/perk/perk";
 import Box from "./UI/Box";
 import { useState } from "react";
 import SpellIcon from "./UI/SpellIcon";
+import PerkIcon from "./UI/PerkIcon";
+import { useMode } from "../contexts/ModeContext";
 
+type RankedItem = RankedSpell | RankedPerk;
 type SortCriteria = "rankScore" | "score" | "winRate" | "total";
 type Tier = "S" | "A" | "B" | "C" | "D";
 
-const getTier = (index: number, total: number): Tier => {
-    const sTierCount = Math.floor(total * 0.025);
-    const aTierCount = Math.floor(total * 0.20);
+const spellTypeNames: { [key: number]: string } = {
+    0: "投射物",
+    1: "静态投射物",
+    2: "投射修正",
+    3: "多重施放",
+    4: "材料",
+    5: "其它",
+    6: "实用",
+    7: "被动",
+};
+
+const getTier = (index: number, total: number, mode: 'spell' | 'perk'): Tier => {
+    let sTierCount, aTierCount;
+
+    if (mode === 'perk') {
+        sTierCount = Math.floor(total * 0.05);
+        aTierCount = Math.floor(total * 0.25);
+    } else { // spell mode
+        sTierCount = Math.floor(total * 0.025);
+        aTierCount = Math.floor(total * 0.20);
+    }
+
     const dTierCount = sTierCount;
     const cTierCount = aTierCount;
 
@@ -30,59 +53,52 @@ const getTierColor = (tier: Tier): string => {
     }
 };
 
-export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], title: string, onRefresh: () => void }) {
+export default function Rank({ rank, onRefresh }: { rank: RankedItem[], onRefresh: () => void }) {
+    const { mode } = useMode();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc"); // Default to desc for rankScore
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
     const [sortBy, setSortBy] = useState<SortCriteria>("rankScore");
+    const [typeFilter, setTypeFilter] = useState<number | null>(null);
+    const [showTypeFilter, setShowTypeFilter] = useState(false);
 
-    // Add originalIndex and tier to each spell
-    const rankedSpellsWithMeta = rank.map((spell, index) => ({
-        ...spell,
+    const rankedItemsWithMeta = rank.map((item, index) => ({
+        ...item,
         originalIndex: index + 1,
-        tier: getTier(index, rank.length),
+        tier: getTier(index, rank.length, mode),
     }));
+
+    const filteredItems = rankedItemsWithMeta.filter(item => 
+        mode === 'perk' || typeFilter === null || ('type' in item && item.type === typeFilter)
+    );
+
+    // Sub-rank should be calculated based on the default-sorted filtered list.
+    const filteredItemsWithSubRank = filteredItems.map((item, index) => ({ ...item, subRank: index + 1 }));
 
     const toggleSortOrder = (criteria: SortCriteria) => {
         if (sortBy === criteria) {
             setSortOrder(prevOrder => (prevOrder === "asc" ? "desc" : "asc"));
         } else {
             setSortBy(criteria);
-            setSortOrder("desc"); // Default to desc for new criteria
+            setSortOrder("desc");
         }
     };
 
-    const sortedRank = [...rankedSpellsWithMeta].sort((a, b) => {
+    const sortedList = [...filteredItemsWithSubRank].sort((a, b) => {
         const order = sortOrder === "asc" ? 1 : -1;
-
         let comparison = 0;
         switch (sortBy) {
-            case "score":
-                comparison = a.score - b.score;
-                break;
+            case "score": comparison = a.score - b.score; break;
             case "winRate":
                 const winRateA = a.total > 0 ? a.win / a.total : 0;
                 const winRateB = b.total > 0 ? b.win / b.total : 0;
                 comparison = winRateA - winRateB;
                 break;
-            case "total":
-                comparison = a.total - b.total;
-                break;
-            case "rankScore":
-                comparison = a.rankScore - b.rankScore;
-                break;
-            default:
-                // This should not be reached with current types, but as a fallback
-                return b.originalIndex - a.originalIndex;
+            case "total": comparison = a.total - b.total; break;
+            case "rankScore": comparison = a.rankScore - b.rankScore; break;
+            default: return b.originalIndex - a.originalIndex;
         }
-
-        // If primary criteria are different, sort by them
-        if (comparison !== 0) {
-            return comparison * order;
-        }
-
-        // Otherwise, use original rank as a tie-breaker (always ascending)
-        return (b.originalIndex - a.originalIndex) * order;
+        return comparison !== 0 ? comparison * order : (b.originalIndex - a.originalIndex) * order;
     });
 
     const NotExpandSize = 10;
@@ -101,6 +117,36 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
         </button>
     );
 
+    const title = mode === 'spell' ? "法术排行榜" : "天赋排行榜";
+    const itemTerm = mode === 'spell' ? "法术" : "天赋";
+    const filterText = typeFilter !== null ? `− ${spellTypeNames[typeFilter]}` : "";
+
+    const handleFilterSelect = (type: number | null) => {
+        setTypeFilter(type);
+        setShowTypeFilter(false);
+    }
+
+    const ItemColumnHeader = () => {
+        if (mode === 'perk') {
+            return <p className="font-bold text-center col-span-4">{itemTerm}</p>;
+        }
+        return (
+            <div className="relative col-span-4">
+                <button type="button" onClick={() => setShowTypeFilter(!showTypeFilter)} className="font-bold text-center w-full">
+                    ▼ {itemTerm} {filterText}
+                </button>
+                {showTypeFilter && (
+                    <div className="absolute z-10 top-full left-0 right-0 bg-gray-800 border border-gray-600 rounded-md shadow-lg mt-1">
+                        <button onClick={() => handleFilterSelect(null)} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">全部</button>
+                        {Object.entries(spellTypeNames).map(([type, name]) => (
+                            <button key={type} onClick={() => handleFilterSelect(Number(type))} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">{name}</button>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <Box>
             <div className="relative flex justify-center items-center">
@@ -113,8 +159,11 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
             </div>
             <div className="grid grid-cols-12 gap-x-4 px-5 py-3 bg-gray-700 text-lg items-center">
                 <p className="font-bold text-center col-span-1">等级</p>
-                <p className="font-bold text-center col-span-1">排名</p>
-                <p className="font-bold text-center col-span-4">法术</p>
+                <div className="flex flex-col items-center col-span-1">
+                    <p className="font-bold text-center">排名</p>
+                    {typeFilter !== null && <p className="font-bold text-sm">同类型</p>}
+                </div>
+                <ItemColumnHeader />
                 <SortButton criteria="rankScore" label="社区认同度" className="col-span-2" />
                 <SortButton criteria="score" label="ELO分" className="col-span-2" />
                 <div className="flex flex-col items-center col-span-2">
@@ -123,14 +172,21 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
                 </div>
             </div>
             <div className="flex flex-col">
-                {sortedRank.slice(0, isExpanded ? sortedRank.length : NotExpandSize).map((item) => {
+                {sortedList.slice(0, isExpanded ? sortedList.length : NotExpandSize).map((item) => {
                     const winRate = item.total > 0 ? (item.win / item.total) * 100 : 0;
                     return (
                         <div key={item.id} className={`grid grid-cols-12 gap-x-4 items-center px-5 py-2 border-b border-gray-200 ${getTierColor(item.tier)}`}>
                             <p className="font-bold text-center text-xl col-span-1">{item.tier}</p>
-                            <p className="text-center col-span-1">{item.originalIndex}</p>
+                            <div className="flex flex-col items-center col-span-1">
+                                <p>{item.originalIndex}</p>
+                                {typeFilter !== null && <p className="text-xs text-gray-400">({item.subRank})</p>}
+                            </div>
                             <div className="col-span-4 flex items-center min-w-0">
-                                <SpellIcon imageUrl={item.imageUrl} type={item.type} />
+                                {mode === 'spell' && 'type' in item ? (
+                                    <SpellIcon imageUrl={item.imageUrl} type={item.type} />
+                                ) : (
+                                    <PerkIcon imageUrl={item.imageUrl} />
+                                )}
                                 <div className="ml-3 text-left break-words">
                                     <p className="text-base font-semibold">{item.name}</p>
                                     <p className="text-xs text-gray-400">{item.id}</p>
@@ -148,7 +204,7 @@ export default function Rank({ rank, title, onRefresh }: { rank: RankedSpell[], 
             </div>
             <button type="button" onClick={toggleExpand} className="w-full flex justify-center items-center px-10 py-2 border-t-2 border-gray-600 hover:bg-gray-600 transition-colors duration-300">
                 <p className="text-xl font-bold">
-                    {isExpanded ? "▲ 收起" : `▼ 展开 (显示 ${Math.min(NotExpandSize, sortedRank.length)}/${sortedRank.length} 条)`}
+                    {isExpanded ? "▲ 收起" : `▼ 展开 (显示 ${Math.min(NotExpandSize, sortedList.length)}/${sortedList.length} 条)`}
                 </p>
             </button>
         </Box>

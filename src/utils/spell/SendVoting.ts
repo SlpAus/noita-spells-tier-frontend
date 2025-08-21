@@ -1,14 +1,13 @@
-import axiosInstance from "../axiosConfig";
-import { SubmitVotePayload } from "../types/vote";
-import { BACKEN_URL } from "../config";
-import { SubmitVotePayloadSchema } from "../types/zodSchemas";
+import { spellApi } from "../../axiosConfig";
+import { SubmitVotePayload } from "../../types/spell/vote";
+import { SubmitVotePayloadSchema } from "../../types/spell/zodSpellSchemas";
 import { z, ZodError } from "zod";
 
 export async function SendVoting(payload: SubmitVotePayload): Promise<void> {
     try {
         // Validate the payload before sending
         const validatedPayload = SubmitVotePayloadSchema.parse(payload);
-        await axiosInstance.post(`${BACKEN_URL}/api/vote`, validatedPayload);
+        await spellApi.post("/api/spells/vote", validatedPayload);
         // No response body validation needed, as we expect a successful status code
         // to indicate success. Axios will throw for non-2xx responses.
     } catch (error) {

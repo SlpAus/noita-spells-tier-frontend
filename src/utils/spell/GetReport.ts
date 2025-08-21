@@ -1,12 +1,11 @@
-import axiosInstance from "../axiosConfig";
-import { UserReport } from "../types/report";
-import { BACKEN_URL } from "../config";
-import { UserReportSchema } from "../types/zodSchemas";
+import { spellApi } from "../../axiosConfig";
+import { UserReport } from "../../types/spell/report";
+import { UserReportSchema } from "../../types/spell/zodSpellSchemas";
 import { z, ZodError } from "zod";
 
 export async function GetReport(): Promise<UserReport> {
     try {
-        const response = await axiosInstance.get(`${BACKEN_URL}/api/report`);
+        const response = await spellApi.get("/api/spells/report");
         const validatedData = UserReportSchema.parse(response.data);
         return validatedData;
     } catch (error) {

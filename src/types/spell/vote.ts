@@ -1,4 +1,4 @@
-import { VOTEResult } from "./votingResult";
+import { VOTEResult } from "../votingResult";
 
 /**
  * @description POST /api/vote 的请求体

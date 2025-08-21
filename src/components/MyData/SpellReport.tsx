@@ -1,64 +1,15 @@
-import { useState } from "react";
-import Box from "./UI/Box";
-import { GetReport } from "../utils/GetReport";
-import { UserReport, MilestoneVote, EncounterRecord, SpellNameRank } from "../types/report";
-import { VOTEResult } from "../types/votingResult";
+import React from 'react';
+import { UserReport as SpellUserReport, MilestoneVote as SpellMilestoneVote, EncounterRecord as SpellEncounterRecord } from "../../types/spell/report";
+import { VOTEResult } from "../../types/votingResult";
+import { formatDateToDay, isSameDay, formatItemPairNames, Section } from "./utils";
 
-const formatDateToDay = (dateString: string) => new Date(dateString).toLocaleDateString();
+// Note: Most of these components are heavily customized for the "Spell" context.
 
-const isSameDay = (dateString1: string, dateString2: string) => {
-    const d1 = new Date(dateString1);
-    const d2 = new Date(dateString2);
-    return d1.getFullYear() === d2.getFullYear() &&
-           d1.getMonth() === d2.getMonth() &&
-           d1.getDate() === d2.getDate();
-};
-
-const formatSpellPairNames = (spellA: SpellNameRank, spellB: SpellNameRank): [SpellNameRank, SpellNameRank] => {
-    if (spellA.name === spellB.name) {
-        return [
-            { ...spellA, name: `${spellA.name} (${spellA.id})` },
-            { ...spellB, name: `${spellB.name} (${spellB.id})` },
-        ];
-    }
-    return [spellA, spellB];
-};
-
-const Section = ({ title, children }: { title: string, children: React.ReactNode }) => (
-    <div className="pt-4">
-        <h4 className="text-xl font-bold mb-2">{title}</h4>
-        <div className="space-y-2 pl-4 border-l-2 border-blue-300">{children}</div>
-    </div>
-);
-
-const ReportDisplay = ({ report }: { report: UserReport }) => {
-    const hasBasicStats = report.totalVotes > 0;
-    const hasTendencies = report.communityConsistencyIndex != null || report.upsetTendency != null;
-    const hasHighlights = report.mostChosen || report.highestWinRate || report.chosenOne || report.nemesis || report.mostSubversive;
-    const hasMilestones = report.firstVote || (report.milestones && report.milestones.length > 0) || report.busiestDay || report.firstEncounterTop || report.firstEncounterBottom;
-
-    return (
-        <div className="mt-4 w-full max-w-3xl text-left text-base bg-gray-700 rounded-2xl p-6 space-y-2">
-            <h3 className="text-2xl font-bold text-center">你的个性化报告</h3>
-            <p className="text-sm text-center text-gray-400">报告基于 {new Date(report.generatedAt).toLocaleString()} 的数据生成</p>
-
-            {hasBasicStats && <BasicStatsSection report={report} />}
-
-            {hasTendencies && <TendenciesSection report={report} />}
-
-            {hasHighlights && <HighlightsSection report={report} />}
-            
-            {hasMilestones && <MilestonesSection report={report} />}
-        </div>
-    );
-};
-
-const BasicStatsSection = ({ report }: { report: UserReport }) => {
+export const BasicStatsSection = ({ report }: { report: SpellUserReport }) => {
     const { totalVotes, voteRankpercent, choices, decisionRate, communityDecisionRate } = report;
 
     const renderDecisionRateText = () => {
         if (decisionRate == null) return null;
-
         const userRate = decisionRate * 100;
         if (communityDecisionRate != null) {
             const communityRate = communityDecisionRate * 100;
@@ -80,7 +31,7 @@ const BasicStatsSection = ({ report }: { report: UserReport }) => {
     );
 };
 
-const TendenciesSection = ({ report }: { report: UserReport }) => {
+export const TendenciesSection = ({ report }: { report: SpellUserReport }) => {
     const { communityConsistencyIndex, upsetTendency } = report;
 
     const renderConsistencyText = () => {
@@ -111,12 +62,12 @@ const TendenciesSection = ({ report }: { report: UserReport }) => {
     );
 };
 
-const HighlightsSection = ({ report }: { report: UserReport }) => {
+export const HighlightsSection = ({ report }: { report: SpellUserReport }) => {
     const { mostChosen, highestWinRate, chosenOne, nemesis, mostSubversive } = report;
 
     const renderMostSubversive = () => {
         if (!mostSubversive) return null;
-        const [spellA, spellB] = formatSpellPairNames(mostSubversive.spellA, mostSubversive.spellB);
+        const [spellA, spellB] = formatItemPairNames(mostSubversive.spellA, mostSubversive.spellB);
         const winner = mostSubversive.result === VOTEResult.A_WINS ? spellA : spellB;
         const loser = mostSubversive.result === VOTEResult.A_WINS ? spellB : spellA;
         return (
@@ -140,8 +91,8 @@ const HighlightsSection = ({ report }: { report: UserReport }) => {
     );
 };
 
-const MilestoneVoteDisplay = ({ vote }: { vote: MilestoneVote }) => {
-    const [spellA, spellB] = formatSpellPairNames(vote.spellA, vote.spellB);
+const MilestoneVoteDisplay = ({ vote }: { vote: SpellMilestoneVote }) => {
+    const [spellA, spellB] = formatItemPairNames(vote.spellA, vote.spellB);
 
     let voteActionText;
     switch (vote.result) {
@@ -190,11 +141,11 @@ const MilestoneVoteDisplay = ({ vote }: { vote: MilestoneVote }) => {
     );
 };
 
-const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, type: "Top" | "Bottom" }) => {
+const EncounterDisplay = ({ encounter, type }: { encounter: SpellEncounterRecord, type: "Top" | "Bottom" }) => {
     if (!encounter) return null;
 
     const { voteNumber, result, date } = encounter;
-    const [spellA, spellB] = formatSpellPairNames(encounter.spellA, encounter.spellB);
+    const [spellA, spellB] = formatItemPairNames(encounter.spellA, encounter.spellB);
 
     if (type === "Top") {
         let encounterDescription;
@@ -207,16 +158,16 @@ const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, typ
                 case VOTEResult.B_WINS:
                     const winner = result === VOTEResult.A_WINS ? spellA : spellB;
                     if (winner.id === specialSpell.id) {
-                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，名不虚传地战胜了排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
+                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank!}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，名不虚传地战胜了排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
                     } else {
-                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，出人意料地落败于排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
+                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank!}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，出人意料地落败于排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
                     }
                     break;
                 case VOTEResult.DRAW:
-                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，即使是排名为 <span className="font-bold">{specialSpell.rank}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，也和排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span> 同样没能赢得你的认可。</>;
+                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，即使是排名为 <span className="font-bold">{specialSpell.rank!}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span>，也和排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span> 同样没能赢得你的认可。</>;
                     break;
                 case VOTEResult.SKIP:
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{specialSpell.rank}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span> 和排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>，选择为这场对局留下悬念。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{specialSpell.rank!}</span> 的巅峰法术 <span className="font-bold">{specialSpell.name}</span> 和排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>，选择为这场对局留下悬念。</>;
                     break;
             }
         } else {
@@ -224,13 +175,13 @@ const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, typ
                 case VOTEResult.A_WINS:
                 case VOTEResult.B_WINS:
                     const winner = result === VOTEResult.A_WINS ? spellA : spellB;
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，见证了一场巅峰对决。排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span> 相遇，最终 <span className="font-bold">{winner.name}</span> 以微弱优势胜出。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，见证了一场巅峰对决。排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span> 相遇，最终 <span className="font-bold">{winner.name}</span> 以微弱优势胜出。</>;
                     break;
                 case VOTEResult.DRAW:
-                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，当排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span> 狭路相逢，你却认为二者都不能入你的法眼。</>;
+                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，当排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span> 狭路相逢，你却认为二者都不能入你的法眼。</>;
                     break;
                 case VOTEResult.SKIP:
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，当星辰交汇，你选择了仰望排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span>，而非给出自己的评判。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，当星辰交汇，选择了仰望排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span>，而非给出自己的评判。</>;
                     break;
             }
         }
@@ -246,16 +197,16 @@ const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, typ
                 case VOTEResult.B_WINS:
                     const winner = result === VOTEResult.A_WINS ? spellA : spellB;
                     if (winner.id === specialSpell.id) {
-                        encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，勇敢地将票投给排名为 <span className="font-bold">{specialSpell.rank}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span>，令它爆冷战胜了排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
+                        encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，勇敢地将票投给排名为 <span className="font-bold">{specialSpell.rank!}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span>，令它爆冷战胜了排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>。</>;
                     } else {
-                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 不出所料地落败于排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>。这些不期而遇，充实了你的投票之旅。</>;
+                        encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，排名为 <span className="font-bold">{specialSpell.rank!}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 不出所料地落败于排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>。这些不期而遇，充实了你的投票之旅。</>;
                     }
                     break;
                 case VOTEResult.DRAW:
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，将排名为 <span className="font-bold">{specialSpell.rank}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 连着排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span> 一并拒绝。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，将排名为 <span className="font-bold">{specialSpell.rank!}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 连着排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span> 一并拒绝。</>;
                     break;
                 case VOTEResult.SKIP:
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{specialSpell.rank}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 和排名为 <span className="font-bold">{otherSpell.rank}</span> 的 <span className="font-bold">{otherSpell.name}</span>，选择为这次对局保留一份神秘。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{specialSpell.rank!}</span> 的垫底法术 <span className="font-bold">{specialSpell.name}</span> 和排名为 <span className="font-bold">{otherSpell.rank!}</span> 的 <span className="font-bold">{otherSpell.name}</span>，选择为这次对局保留一份神秘。</>;
                     break;
             }
         } else {
@@ -263,13 +214,13 @@ const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, typ
                 case VOTEResult.A_WINS:
                 case VOTEResult.B_WINS:
                     const winner = result === VOTEResult.A_WINS ? spellA : spellB;
-                    encounterDescription = <>你的第 <span className="font-bold">{voteNumber}</span> 票见证了一场奇特的对决，在排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span> 中，你最终选择了 <span className="font-bold">{winner.name}</span> 作为胜利者。</>;
+                    encounterDescription = <>你的第 <span className="font-bold">{voteNumber}</span> 票见证了一场奇特的对决，在排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span> 中，你最终选择了 <span className="font-bold">{winner.name}</span> 作为胜利者。</>;
                     break;
                 case VOTEResult.DRAW:
-                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span>，你不留情面地将它们全部拒绝。</>;
+                    encounterDescription = <>在你的第 <span className="font-bold">{voteNumber}</span> 票里，面对排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span>，你不留情面地将它们全部拒绝。</>;
                     break;
                 case VOTEResult.SKIP:
-                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，仔细考量了排名为 <span className="font-bold">{spellA.rank}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank}</span> 的 <span className="font-bold">{spellB.name}</span>，最终没有做出选择。</>;
+                    encounterDescription = <>你在第 <span className="font-bold">{voteNumber}</span> 票里，仔细考量了排名为 <span className="font-bold">{spellA.rank!}</span> 的 <span className="font-bold">{spellA.name}</span> 和排名为 <span className="font-bold">{spellB.rank!}</span> 的 <span className="font-bold">{spellB.name}</span>，最终没有做出选择。</>;
                     break;
             }
         }
@@ -277,15 +228,13 @@ const EncounterDisplay = ({ encounter, type }: { encounter: EncounterRecord, typ
     }
 };
 
-const MilestonesSection = ({ report }: { report: UserReport }) => {
+export const MilestonesSection = ({ report }: { report: SpellUserReport }) => {
     const { firstVote, milestones, busiestDay, firstEncounterTop, firstEncounterBottom } = report;
 
     const renderFirstVote = () => {
         if (!firstVote) return null;
-
-        const [spellA, spellB] = formatSpellPairNames(firstVote.spellA, firstVote.spellB);
+        const [spellA, spellB] = formatItemPairNames(firstVote.spellA, firstVote.spellB);
         let voteDescription;
-
         switch (firstVote.result) {
             case VOTEResult.A_WINS:
                 voteDescription = <>在 <span className="font-bold">{spellA.name}</span> 和 <span className="font-bold">{spellB.name}</span> 之间，你选择了前者</>;
@@ -300,80 +249,28 @@ const MilestonesSection = ({ report }: { report: UserReport }) => {
                 voteDescription = <>面对 <span className="font-bold">{spellA.name}</span> 和 <span className="font-bold">{spellB.name}</span> 的对决，你选择保留意见</>;
                 break;
         }
-
-        return (
-            <p>
-                一切故事都有一个开始。在 <span className="font-bold">{formatDateToDay(firstVote.date)}</span>，你投出了意义非凡的第一票，
-                {voteDescription}
-                ，这是你传奇旅程的序章。
-            </p>
-        );
+        return <p>一切故事都有一个开始。在 <span className="font-bold">{formatDateToDay(firstVote.date)}</span>，你投出了意义非凡的第一票，{voteDescription}，这是你传奇旅程的序章。</p>;
     };
 
     const renderBusiestDay = () => {
         if (!busiestDay) return null;
-
         const { fromDate, toDate, voteCount } = busiestDay;
         const sameDay = isSameDay(fromDate, toDate);
-
         const dateText = sameDay ? (
             <>在 <span className="font-bold">{formatDateToDay(fromDate)}</span> 这一天</>
         ) : (
             <>在从 <span className="font-bold">{formatDateToDay(fromDate)}</span> 到 <span className="font-bold">{formatDateToDay(toDate)}</span> 的24小时里</>
         );
-
-        return (
-            <p>
-                {dateText}，你创下了投出 <span className="font-bold">{voteCount}</span> 票的记录。那天一定发生了什么特别精彩的对决吧？
-            </p>
-        );
+        return <p>{dateText}，你创下了投出 <span className="font-bold">{voteCount}</span> 票的记录。那天一定发生了什么特别精彩的对决吧？</p>;
     };
 
     return (
         <Section title="里程碑与记录">
             {renderFirstVote()}
-            {milestones && milestones.map(m => <MilestoneVoteDisplay key={m.voteNumber} vote={m} />)}
+            {milestones && milestones.map((m, i) => <MilestoneVoteDisplay key={i} vote={m} />)}
             {renderBusiestDay()}
             {firstEncounterTop && <EncounterDisplay encounter={firstEncounterTop} type="Top" />}
             {firstEncounterBottom && <EncounterDisplay encounter={firstEncounterBottom} type="Bottom" />}
         </Section>
     );
 };
-
-export default function MyData() {
-    const [reportData, setReportData] = useState<UserReport | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [showReport, setShowReport] = useState(false);
-
-    const handleFetchReport = async () => {
-        if (showReport) {
-            setShowReport(false);
-            return;
-        }
-        setLoading(true);
-        setError(null);
-        try {
-            const data = await GetReport();
-            setReportData(data);
-            setShowReport(true);
-        } catch (err) {
-            console.error("Error fetching report data:", err);
-            setError("无法获取报告，请稍后再试。");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <Box>
-            <div className="flex flex-col items-center space-y-4 p-4">
-                <button type="button" onClick={handleFetchReport} className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-300" disabled={loading}>
-                    {loading ? "加载中..." : showReport ? "收起个性化报告" : "获取个性化报告"}
-                </button>
-                {error && <p className="text-red-500 mt-2">{error}</p>}
-                {showReport && reportData && <ReportDisplay report={reportData} />}
-            </div>
-        </Box>
-    );
-}

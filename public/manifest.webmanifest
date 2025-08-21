@@ -1,6 +1,6 @@
 {
-  "short_name": "Spell Tier",
-  "name": "Noita Spell Tier",
+  "short_name": "Noita Tier",
+  "name": "Noita Spell/Perk Tier",
   "icons": [
     {
       "src": "noita.png",

@@ -1,14 +1,13 @@
-import axiosInstance from "../axiosConfig";
-import { RankedSpell } from "../types/spell";
-import { BACKEN_URL } from "../config";
-import { RankingSchema } from "../types/zodSchemas";
+import { spellApi } from "../../axiosConfig";
+import { RankedSpell } from "../../types/spell/spell";
+import { RankingSchema } from "../../types/spell/zodSpellSchemas";
 import { z, ZodError } from "zod";
 
 export async function GetRanking(): Promise<RankedSpell[]> {
     try {
-        const res = await axiosInstance.get(`${BACKEN_URL}/api/spells/ranking`);
+        const response = await spellApi.get("/api/spells/ranking");
         // Validate the response data with Zod
-        const validatedData = RankingSchema.parse(res.data);
+        const validatedData = RankingSchema.parse(response.data);
         return validatedData;
     } catch (error) {
         if (error instanceof ZodError) {

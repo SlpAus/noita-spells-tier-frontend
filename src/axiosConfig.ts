@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { BACKEN_URL } from './config';
+import { SPELL_BACKEND_URL, PERK_BACKEND_URL } from './config';
 
-// 创建一个 axios 实例
-const axiosInstance = axios.create({
-    withCredentials: true, // 确保每次请求都发送 cookie
-    baseURL: BACKEN_URL, // 替换为你的 API 基础 URL
+export const spellApi = axios.create({
+    withCredentials: true,
+    baseURL: SPELL_BACKEND_URL,
 });
 
-export default axiosInstance;
+export const perkApi = axios.create({
+    withCredentials: true,
+    baseURL: PERK_BACKEND_URL,
+});
