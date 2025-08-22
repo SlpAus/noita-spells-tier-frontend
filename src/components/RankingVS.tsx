@@ -20,6 +20,8 @@ interface RankingVSProps {
 
 const ItemDisplay = ({ item, onVote, className }: { item: VotableItem, onVote: () => void, className?: string }) => {
     const { mode } = useMode();
+
+    // whitespace-pre-wrap: display \n
     return (
         <button type="button" onClick={onVote} className={`w-full h-full p-4 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors grid grid-rows-[1fr_auto] place-items-center ${className}`}>
             {mode === 'spell' && 'type' in item ? (
@@ -29,7 +31,7 @@ const ItemDisplay = ({ item, onVote, className }: { item: VotableItem, onVote: (
             )}
             <div className="w-full text-center pt-4 self-end">
                 <p className="text-xl font-bold">{item.name}</p>
-                <p className="text-sm text-gray-400 mt-1">{item.description}</p>
+                <p className="text-sm text-gray-400 mt-1 whitespace-pre-wrap">{item.description}</p>
             </div>
         </button>
     )
